@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class SebutHargaPage extends StatefulWidget {
   const SebutHargaPage({super.key});
@@ -36,7 +38,26 @@ class _ItemKerja {
 class _SebutHargaPageState extends State<SebutHargaPage> {
   final pelanggan = TextEditingController();
   final tajuk = TextEditingController();
+  Future<void> simpanSebutHarga() async {
+  final data = {
+    'pelanggan': pelanggan.text,
+    'tajuk': tajuk.text,
+    'tarikh': DateTime.now().toIso8601String(),
+    'items': items.map((item) => {
+      'butiran': item.butiran.text,
+      'unit': item.unit,
+      'kuantiti': item.kuantiti.text,
+      'kadar': item.kadar.text,
+    }).toList(),
+    'jumlah': jumlahKeseluruhan,
+  };
 
+  final prefs = await SharedPreferences.getInstance();
+  final senarai = prefs.getStringList('senarai_sebut_harga') ?? [];
+  senarai.add(jsonEncode(data));
+
+  await prefs.setStringList('senarai_sebut_harga', senarai);
+}
   final List<_ItemKerja> items = [_ItemKerja()];
 
   static const List<String> units = [
@@ -273,7 +294,32 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
             ),
           ),
           const SizedBox(height: 20),
-        ],
+        ElevatedButton.icon(
+  onPressed: () async {
+    try {
+      await simpanSebutHarga();
+
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Sebut harga berjaya disimpan'),
+        ),
+      );
+    } catch (e) {
+      if (!mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Gagal menyimpan sebut harga'),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.save_outlined),
+  label: const Text('Simpan Sebut Harga'),
+),
+],
       ),
     );
   }
