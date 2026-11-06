@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'sebut_harga_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -110,13 +111,24 @@ class DashboardPage extends StatelessWidget {
         ),
         subtitle: Text(subtitle),
         trailing: const Icon(Icons.chevron_right),
-        onTap: () {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('$title - Akan dibangunkan'),
-            ),
-          );
-        },
+        
+onTap: () {
+  if (title == 'Sebut Harga') {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => const SebutHargaPage(),
+      ),
+    );
+  } else {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('$title - Akan dibangunkan'),
+      ),
+    );
+  }
+},
+
       ),
     );
   }
