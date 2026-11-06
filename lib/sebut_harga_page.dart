@@ -159,7 +159,7 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
             ),
             const SizedBox(height: 12),
             DropdownButtonFormField<String>(
-              value: item.unit,
+              initialValue: item.unit,
               isExpanded: true,
               decoration: const InputDecoration(
                 labelText: 'Unit Ukuran',
