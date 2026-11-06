@@ -296,12 +296,13 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
           const SizedBox(height: 20),
         ElevatedButton.icon(
   onPressed: () async {
+    final messenger = ScaffoldMessenger.of(context);
     try {
       await simpanSebutHarga();
 
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('Sebut harga berjaya disimpan'),
         ),
@@ -309,7 +310,7 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
     } catch (e) {
       if (!mounted) return;
 
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         const SnackBar(
           content: Text('Gagal menyimpan sebut harga'),
         ),
