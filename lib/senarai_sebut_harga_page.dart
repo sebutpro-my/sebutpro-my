@@ -109,7 +109,32 @@ class _SenaraiSebutHargaPageState
 
                       return Card(
                         margin: const EdgeInsets.only(bottom: 12),
-                        child: Padding(
+                        child: InkWell(
+  borderRadius: BorderRadius.circular(12),
+  onTap: () {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(data['tajuk']?.toString() ?? 'Sebut Harga'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text('Pelanggan: ${data['pelanggan'] ?? '-'}'),
+            Text('Tarikh: ${formatTarikh(data['tarikh'])}'),
+            Text('Jumlah: ${formatWang(data['jumlah'])}'),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Tutup'),
+          ),
+        ],
+      ),
+    );
+  },
+  child: Padding(
                           padding: const EdgeInsets.all(16),
                           child: Column(
                             crossAxisAlignment:
@@ -143,6 +168,7 @@ class _SenaraiSebutHargaPageState
                               ),
                             ],
                           ),
+                        ),
                         ),
                       );
                     },
