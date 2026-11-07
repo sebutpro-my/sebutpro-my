@@ -357,6 +357,9 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
           content: Text('Sebut harga berjaya disimpan'),
         ),
       );
+      if (widget.indeksEdit != null) {
+  Navigator.pop(context, true);
+}
     } catch (e) {
       if (!mounted) return;
 
