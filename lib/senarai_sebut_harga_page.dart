@@ -38,7 +38,7 @@ class _SenaraiSebutHargaPageState
       if (!mounted) return;
 
       setState(() {
-        rekod = data.reversed.toList();
+        rekod = data.toList();
         sedangMuat = false;
       });
     } catch (e) {
