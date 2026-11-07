@@ -1,5 +1,4 @@
 
-import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -122,7 +121,7 @@ class JanaPdf {
             ),
           ),
           pw.SizedBox(height: 20),
-          pw.Table.fromTextArray(
+          pw.TableHelper.fromTextArray(
             headers: [
               'Bil.',
               'Butiran Kerja',
