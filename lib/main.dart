@@ -1,4 +1,5 @@
 
+import 'profil_syarikat_page.dart';
 import 'package:flutter/material.dart';
 import 'sebut_harga_page.dart';
 import 'senarai_sebut_harga_page.dart';
@@ -136,6 +137,15 @@ onTap: () {
       builder: (context) => const SenaraiSebutHargaPage(),
     ),
   );
+
+} else if (title == 'Profil Syarikat') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const ProfilSyarikatPage(),
+    ),
+  );
+
 } else {
 
     ScaffoldMessenger.of(context).showSnackBar(
