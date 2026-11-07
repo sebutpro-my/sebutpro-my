@@ -98,7 +98,13 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
 
   final prefs = await SharedPreferences.getInstance();
   final senarai = prefs.getStringList('senarai_sebut_harga') ?? [];
+  if (widget.indeksEdit != null &&
+    widget.indeksEdit! >= 0 &&
+    widget.indeksEdit! < senarai.length) {
+  senarai[widget.indeksEdit!] = jsonEncode(data);
+} else {
   senarai.add(jsonEncode(data));
+}
 
   await prefs.setStringList('senarai_sebut_harga', senarai);
 }
