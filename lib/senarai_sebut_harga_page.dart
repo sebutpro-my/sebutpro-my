@@ -215,9 +215,87 @@ actions: [
     },
     icon: const Icon(Icons.edit),
     label: const Text('Edit'),
+  ),  
+  TextButton.icon(
+    onPressed: () async {
+      final navigator = Navigator.of(context);
+      final messenger = ScaffoldMessenger.of(context);
+
+      final sahPadam = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Padam Sebut Harga?'),
+          content: const Text(
+            'Adakah anda pasti mahu memadam rekod ini? '
+            'Tindakan ini tidak boleh dibatalkan.',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, false),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, true),
+              child: const Text(
+                'Padam',
+                style: TextStyle(color: Colors.red),
+              ),
+            ),
+          ],
+        ),
+      );
+
+      if (sahPadam != true || !mounted) return;
+
+      try {
+        final prefs = await SharedPreferences.getInstance();
+        final senarai =
+            prefs.getStringList('senarai_sebut_harga') ?? [];
+
+        if (index < 0 || index >= senarai.length) {
+          throw StateError('Rekod tidak ditemui');
+        }
+
+        senarai.removeAt(index);
+        final berjaya = await prefs.setStringList(
+          'senarai_sebut_harga',
+          senarai,
+        );
+
+        if (!berjaya) {
+          throw StateError('Gagal menyimpan perubahan');
+        }
+
+        if (!mounted) return;
+        navigator.pop();
+        await muatRekod();
+
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Sebut harga berjaya dipadam'),
+          ),
+        );
+      } catch (e) {
+        if (!mounted) return;
+        messenger.showSnackBar(
+          const SnackBar(
+            content: Text('Gagal memadam sebut harga'),
+          ),
+        );
+      }
+    },
+    icon: const Icon(
+      Icons.delete_outline,
+      color: Colors.red,
+    ),
+    label: const Text(
+      'Padam',
+      style: TextStyle(color: Colors.red),
+    ),
   ),
 ],
-
       ),
     );
   },
