@@ -4,7 +4,14 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SebutHargaPage extends StatefulWidget {
-  const SebutHargaPage({super.key});
+  final Map<String, dynamic>? rekodEdit;
+  final int? indeksEdit;
+
+  const SebutHargaPage({
+    super.key,
+    this.rekodEdit,
+    this.indeksEdit,
+  });
 
   @override
   State<SebutHargaPage> createState() => _SebutHargaPageState();
