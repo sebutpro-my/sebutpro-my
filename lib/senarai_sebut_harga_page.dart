@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'sebut_harga_page.dart';
 class SenaraiSebutHargaPage extends StatefulWidget {
   const SenaraiSebutHargaPage({super.key});
 
@@ -189,12 +189,35 @@ content: SizedBox(
   ),
 ),
 
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
+        
+actions: [
+  TextButton(
+    onPressed: () => Navigator.pop(context),
+    child: const Text('Tutup'),
+  ),
+  ElevatedButton.icon(
+    onPressed: () async {
+      Navigator.pop(context);
+
+      await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => SebutHargaPage(
+            rekodEdit: Map<String, dynamic>.from(data),
+            indeksEdit: index,
           ),
-        ],
+        ),
+      );
+
+      if (context.mounted) {
+        await muatRekod();
+      }
+    },
+    icon: const Icon(Icons.edit),
+    label: const Text('Edit'),
+  ),
+],
+
       ),
     );
   },
