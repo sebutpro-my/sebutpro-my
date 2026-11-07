@@ -45,6 +45,43 @@ class _ItemKerja {
 class _SebutHargaPageState extends State<SebutHargaPage> {
   final pelanggan = TextEditingController();
   final tajuk = TextEditingController();
+  
+  @override
+  void initState() {
+    super.initState();
+
+    final data = widget.rekodEdit;
+    if (data == null) return;
+
+    pelanggan.text = data['pelanggan']?.toString() ?? '';
+    tajuk.text = data['tajuk']?.toString() ?? '';
+
+    final itemLama = data['items'];
+
+    if (itemLama is List) {
+      for (final item in items) {
+        item.dispose();
+      }
+      items.clear();
+
+      for (final rekod in itemLama) {
+        if (rekod is! Map) continue;
+
+        final item = _ItemKerja();
+        item.butiran.text = rekod['butiran']?.toString() ?? '';
+        item.unit = rekod['unit']?.toString() ?? 'm²';
+        item.kuantiti.text = rekod['kuantiti']?.toString() ?? '';
+        item.kadar.text = rekod['kadar']?.toString() ?? '';
+
+        items.add(item);
+      }
+
+      if (items.isEmpty) {
+        items.add(_ItemKerja());
+      }
+    }
+  }
+
   Future<void> simpanSebutHarga() async {
   final data = {
     'pelanggan': pelanggan.text,
