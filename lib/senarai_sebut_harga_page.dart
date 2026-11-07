@@ -1,4 +1,5 @@
 
+import 'jana_pdf.dart';
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -295,6 +296,22 @@ actions: [
       style: TextStyle(color: Colors.red),
     ),
   ),
+  ElevatedButton.icon(
+  onPressed: () async {
+    try {
+      await JanaPdf.jana(data);
+    } catch (e) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(this.context).showSnackBar(
+        const SnackBar(
+          content: Text('Gagal menjana PDF'),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.picture_as_pdf_outlined),
+  label: const Text('Jana PDF'),
+),
 ],
       ),
     );
