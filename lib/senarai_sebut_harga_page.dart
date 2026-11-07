@@ -116,15 +116,79 @@ class _SenaraiSebutHargaPageState
       context: context,
       builder: (context) => AlertDialog(
         title: Text(data['tajuk']?.toString() ?? 'Sebut Harga'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text('Pelanggan: ${data['pelanggan'] ?? '-'}'),
-            Text('Tarikh: ${formatTarikh(data['tarikh'])}'),
-            Text('Jumlah: ${formatWang(data['jumlah'])}'),
-          ],
+        
+content: SizedBox(
+  width: double.maxFinite,
+  child: SingleChildScrollView(
+    child: Column(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text('Pelanggan: ${data['pelanggan'] ?? '-'}'),
+        Text('Tarikh: ${formatTarikh(data['tarikh'])}'),
+        const SizedBox(height: 16),
+        const Text(
+          'Senarai Kerja',
+          style: TextStyle(fontWeight: FontWeight.bold),
         ),
+        const Divider(),
+        ...((data['items'] is List)
+                ? (data['items'] as List)
+                : <dynamic>[])
+            .asMap()
+            .entries
+            .map((entry) {
+          final item = entry.value;
+          if (item is! Map) {
+            return const SizedBox.shrink();
+          }
+
+          final butiran = item['butiran'] ?? '-';
+          final unit = item['unit'] ?? '-';
+          final kuantiti =
+              double.tryParse('${item['kuantiti']}') ?? 0;
+          final kadar =
+              double.tryParse('${item['kadar']}') ?? 0;
+          final jumlahItem = kuantiti * kadar;
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '${entry.key + 1}. $butiran',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+                Text(
+                  '$kuantiti $unit × ${formatWang(kadar)}',
+                ),
+                Text(
+                  formatWang(jumlahItem),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }),
+        const Divider(),
+        Text(
+          'Jumlah Keseluruhan: '
+          '${formatWang(data['jumlah'])}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+        ),
+      ],
+    ),
+  ),
+),
+
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
