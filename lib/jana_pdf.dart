@@ -77,6 +77,7 @@ final adaMaklumatBank =
     nomborAkaun.isNotEmpty;
 
     final tajuk = data['tajuk']?.toString() ?? '-';
+    final rujukan = data['rujukan']?.toString() ?? '';
     final pelanggan =
         data['pelanggan']?.toString() ?? '-';
     final tarikhDokumen = tarikh(data['tarikh']);
@@ -175,6 +176,9 @@ pw.Center(
 ),
 
           pw.Divider(),
+          
+if (rujukan.isNotEmpty)
+          pw.Text('No. Rujukan: $rujukan'),
           pw.Text('Pelanggan: $pelanggan'),
           pw.Text('Tarikh: $tarikhDokumen'),
           pw.SizedBox(height: 12),
