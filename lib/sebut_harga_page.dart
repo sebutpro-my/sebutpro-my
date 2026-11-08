@@ -356,7 +356,22 @@ if (widget.indeksEdit == null && modRujukan == 'auto') {
           const SizedBox(height: 12),
           medan('Tajuk Projek / Kerja', tajuk),
           const SizedBox(height: 12),
-          medan('No. Rujukan Sebut Harga', rujukan),
+          TextField(
+            controller: rujukan,
+            readOnly: modRujukan == 'auto',
+            decoration: InputDecoration(
+              labelText: 'No. Rujukan Sebut Harga',
+              border: const OutlineInputBorder(),
+              filled: modRujukan == 'auto',
+              fillColor: modRujukan == 'auto'
+                  ? Colors.grey.shade100
+                  : null,
+              suffixIcon: modRujukan == 'auto'
+              ? const Icon(Icons.lock_outline)
+              : null,
+           ),
+          ),
+
           const SizedBox(height: 24),
           const Text(
             'Senarai Item Kerja',
