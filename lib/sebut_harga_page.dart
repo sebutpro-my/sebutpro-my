@@ -164,6 +164,8 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
   void dispose() {
     pelanggan.dispose();
     tajuk.dispose();
+    rujukan.dispose();
+
     for (final item in items) {
       item.dispose();
     }
@@ -383,17 +385,4 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
       ),
     );
   }
-
-@override
-void dispose() {
-  pelanggan.dispose();
-  tajuk.dispose();
-  rujukan.dispose();
-
-  for (final item in items) {
-    item.dispose();
-  }
-
-  super.dispose();
-}
 }
