@@ -124,7 +124,34 @@ Future<void> muatTetapanRujukan() async {
 
   final prefs = await SharedPreferences.getInstance();
   final senarai = prefs.getStringList('senarai_sebut_harga') ?? [];
-  if (widget.indeksEdit != null &&
+  
+final nomborRujukan = rujukan.text.trim().toLowerCase();
+
+if (nomborRujukan.isEmpty) {
+  throw StateError('Sila isi nombor rujukan sebut harga');
+}
+
+for (var i = 0; i < senarai.length; i++) {
+  if (widget.indeksEdit == i) continue;
+
+  final rekod = jsonDecode(senarai[i]);
+
+  if (rekod is! Map) continue;
+
+  final rujukanLama =
+      (rekod['rujukan'] ?? '')
+          .toString()
+          .trim()
+          .toLowerCase();
+
+  if (rujukanLama == nomborRujukan) {
+    throw StateError(
+      'Nombor rujukan ini telah digunakan. '
+      'Sila masukkan nombor lain.',
+    );
+  }
+}
+if (widget.indeksEdit != null &&
     widget.indeksEdit! >= 0 &&
     widget.indeksEdit! < senarai.length) {
   senarai[widget.indeksEdit!] = jsonEncode(data);
@@ -431,10 +458,15 @@ Navigator.of(this.context).pop(true);
       if (!mounted) return;
 
       messenger.showSnackBar(
-        const SnackBar(
-          content: Text('Gagal menyimpan sebut harga'),
-        ),
-      );
+        
+SnackBar(
+  content: Text(
+    e is StateError
+        ? e.message.toString()
+        : 'Gagal menyimpan sebut harga',
+  ),
+),
+);
     }
   },
   icon: const Icon(Icons.save_outlined),
