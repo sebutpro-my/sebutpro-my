@@ -161,12 +161,15 @@ onTap: () {
       builder: (context) => const TetapanRujukanPage(),
     ),
   );
-} else {
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Text('$title - Akan dibangunkan'),
-  ),
-);
 
+} else {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('$title - Akan dibangunkan'),
+    ),
+  );
 }
+      },
+    ),
+  );
 }
