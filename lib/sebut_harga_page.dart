@@ -48,8 +48,17 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
   final rujukan = TextEditingController();
   String modRujukan = 'manual';
   int turutanRujukan = 1;
-
   
+final deposit = TextEditingController(text: '30');
+
+final tempohSah = TextEditingController(text: '30');
+
+final termaPembayaran = TextEditingController(
+  text: 'Bayaran deposit diperlukan sebelum kerja '
+      'dimulakan. Baki bayaran dijelaskan selepas '
+      'kerja siap.',
+);
+
   @override
   void initState() {
     super.initState();
@@ -61,6 +70,18 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
     pelanggan.text = data['pelanggan']?.toString() ?? '';
     tajuk.text = data['tajuk']?.toString() ?? '';
     rujukan.text = data['rujukan']?.toString() ?? '';
+    
+deposit.text =
+    data['deposit']?.toString() ?? '30';
+
+tempohSah.text =
+    data['tempoh_sah']?.toString() ?? '30';
+
+termaPembayaran.text =
+    data['terma_pembayaran']?.toString() ??
+    'Bayaran deposit diperlukan sebelum kerja '
+    'dimulakan. Baki bayaran dijelaskan selepas '
+    'kerja siap.';
 
     final itemLama = data['items'];
 
@@ -108,10 +129,43 @@ Future<void> muatTetapanRujukan() async {
 }
 
   Future<void> simpanSebutHarga() async {
-  final data = {
+  
+final teksDeposit = deposit.text.trim();
+final teksTempoh = tempohSah.text.trim();
+
+final nilaiDeposit = teksDeposit.isEmpty
+    ? null
+    : double.tryParse(teksDeposit);
+
+final nilaiTempoh = teksTempoh.isEmpty
+    ? null
+    : int.tryParse(teksTempoh);
+
+if (teksDeposit.isNotEmpty &&
+    (nilaiDeposit == null ||
+        !nilaiDeposit.isFinite ||
+        nilaiDeposit < 0 ||
+        nilaiDeposit > 100)) {
+  throw StateError(
+    'Deposit mesti antara 0% hingga 100%',
+  );
+}
+
+if (teksTempoh.isNotEmpty &&
+    (nilaiTempoh == null ||
+        nilaiTempoh < 1 ||
+        nilaiTempoh > 365)) {
+  throw StateError(
+    'Tempoh sah mesti antara 1 hingga 365 hari',
+  );
+}
+final data = {
     'pelanggan': pelanggan.text,
     'tajuk': tajuk.text,
     'rujukan': rujukan.text.trim(),
+    'deposit': deposit.text.trim(),
+    'tempoh_sah': tempohSah.text.trim(),
+    'terma_pembayaran': termaPembayaran.text.trim(),
     'tarikh': DateTime.now().toIso8601String(),
     'items': items.map((item) => {
       'butiran': item.butiran.text,
@@ -236,6 +290,10 @@ if (widget.indeksEdit == null && modRujukan == 'auto') {
     pelanggan.dispose();
     tajuk.dispose();
     rujukan.dispose();
+    
+    deposit.dispose();
+    tempohSah.dispose();
+    termaPembayaran.dispose();
 
     for (final item in items) {
       item.dispose();
@@ -398,6 +456,32 @@ if (widget.indeksEdit == null && modRujukan == 'auto') {
               : null,
            ),
           ),
+          
+const SizedBox(height: 20),
+const Text(
+  'Terma Sebut Harga',
+  style: TextStyle(
+    fontSize: 19,
+    fontWeight: FontWeight.bold,
+  ),
+),
+const SizedBox(height: 12),
+
+medan('Deposit (%)', deposit, nombor: true),
+const SizedBox(height: 12),
+
+medan(
+  'Tempoh Sah Sebut Harga (hari)',
+  tempohSah,
+  nombor: true,
+),
+const SizedBox(height: 12),
+
+medan(
+  'Terma & Syarat Pembayaran',
+  termaPembayaran,
+  maxLines: 4,
+),
 
           const SizedBox(height: 24),
           const Text(
