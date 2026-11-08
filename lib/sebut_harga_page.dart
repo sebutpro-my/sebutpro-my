@@ -45,6 +45,8 @@ class _ItemKerja {
 class _SebutHargaPageState extends State<SebutHargaPage> {
   final pelanggan = TextEditingController();
   final tajuk = TextEditingController();
+  final rujukan = TextEditingController();
+
   
   @override
   void initState() {
@@ -55,6 +57,7 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
 
     pelanggan.text = data['pelanggan']?.toString() ?? '';
     tajuk.text = data['tajuk']?.toString() ?? '';
+    rujukan.text = data['rujukan']?.toString() ?? '';
 
     final itemLama = data['items'];
 
@@ -86,6 +89,7 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
   final data = {
     'pelanggan': pelanggan.text,
     'tajuk': tajuk.text,
+    'rujukan': rujukan.text.trim(),
     'tarikh': DateTime.now().toIso8601String(),
     'items': items.map((item) => {
       'butiran': item.butiran.text,
@@ -305,6 +309,8 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
           medan('Nama Pelanggan', pelanggan),
           const SizedBox(height: 12),
           medan('Tajuk Projek / Kerja', tajuk),
+          const SizedBox(height: 12),
+          medan('No. Rujukan Sebut Harga', rujukan),
           const SizedBox(height: 24),
           const Text(
             'Senarai Item Kerja',
@@ -377,4 +383,17 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
       ),
     );
   }
+
+@override
+void dispose() {
+  pelanggan.dispose();
+  tajuk.dispose();
+  rujukan.dispose();
+
+  for (final item in items) {
+    item.dispose();
+  }
+
+  super.dispose();
+}
 }
