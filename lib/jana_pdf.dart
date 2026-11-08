@@ -80,7 +80,17 @@ final adaMaklumatBank =
     final rujukan = data['rujukan']?.toString() ?? '';
     final pelanggan =
         data['pelanggan']?.toString() ?? '-';
-    final tarikhDokumen = tarikh(data['tarikh']);
+    
+final deposit = double.tryParse(
+  data['deposit']?.toString() ?? '',
+);
+
+final tempohSah =
+    data['tempoh_sah']?.toString().trim() ?? '';
+
+final termaPembayaran =
+    data['terma_pembayaran']?.toString().trim() ?? '';
+final tarikhDokumen = tarikh(data['tarikh']);
 
     final items = data['items'] is List
         ? data['items'] as List
@@ -119,6 +129,14 @@ final adaMaklumatBank =
                 nombor(rekod['kadar']);
       },
     );
+
+    final amaunDeposit = deposit != null
+        ? jumlahKeseluruhan * deposit / 100
+        : null;
+
+    final bakiPembayaran = amaunDeposit != null
+        ? jumlahKeseluruhan - amaunDeposit
+        : null;
 
     pdf.addPage(
       pw.MultiPage(
@@ -235,6 +253,49 @@ if (rujukan.isNotEmpty)
           ),
           
 pw.SizedBox(height: 24),
+
+if (deposit != null ||
+    tempohSah.isNotEmpty ||
+    termaPembayaran.isNotEmpty)
+  pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        'TERMA & SYARAT SEBUT HARGA',
+        style: pw.TextStyle(
+          fontSize: 11,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.blue900,
+        ),
+      ),
+      pw.SizedBox(height: 8),
+
+      if (deposit != null && amaunDeposit != null)
+        pw.Text(
+          'Deposit (${deposit.toStringAsFixed(0)}%): '
+          '${wang(amaunDeposit)}',
+        ),
+
+      if (bakiPembayaran != null)
+        pw.Text(
+          'Baki Pembayaran: ${wang(bakiPembayaran)}',
+        ),
+
+      if (tempohSah.isNotEmpty)
+        pw.Text(
+          'Tempoh Sah Tawaran: $tempohSah hari',
+        ),
+
+      if (termaPembayaran.isNotEmpty) ...[
+        pw.SizedBox(height: 8),
+        pw.Text(
+          termaPembayaran,
+        ),
+      ],
+
+      pw.SizedBox(height: 16),
+    ],
+  ),
 
 if (adaMaklumatBank)
   pw.Column(
