@@ -46,12 +46,15 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
   final pelanggan = TextEditingController();
   final tajuk = TextEditingController();
   final rujukan = TextEditingController();
+  String modRujukan = 'manual';
+  int turutanRujukan = 1;
 
   
   @override
   void initState() {
     super.initState();
-
+    muatTetapanRujukan();
+    
     final data = widget.rekodEdit;
     if (data == null) return;
 
@@ -84,6 +87,25 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
       }
     }
   }
+  
+Future<void> muatTetapanRujukan() async {
+  final prefs = await SharedPreferences.getInstance();
+
+  final mod = prefs.getString('rujukan_mod') ?? 'manual';
+  final awalan = prefs.getString('rujukan_awalan') ?? 'SH/2026/';
+  final turutan = prefs.getInt('rujukan_turutan') ?? 1;
+
+  if (!mounted) return;
+
+  setState(() {
+    modRujukan = mod;
+    turutanRujukan = turutan;
+
+    if (widget.rekodEdit == null && mod == 'auto') {
+      rujukan.text = '$awalan${turutan.toString().padLeft(4, '0')}';
+    }
+  });
+}
 
   Future<void> simpanSebutHarga() async {
   final data = {
@@ -110,7 +132,29 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
   senarai.add(jsonEncode(data));
 }
 
-  await prefs.setStringList('senarai_sebut_harga', senarai);
+final berjaya = await prefs.setStringList(
+  'senarai_sebut_harga',
+  senarai,
+);
+
+if (!berjaya) {
+  throw StateError('Gagal menyimpan sebut harga');
+}
+
+if (widget.indeksEdit == null && modRujukan == 'auto') {
+  final turutanSemasa =
+      prefs.getInt('rujukan_turutan') ?? 1;
+
+  final berjayaTurutan = await prefs.setInt(
+    'rujukan_turutan',
+    turutanSemasa + 1,
+  );
+
+  if (!berjayaTurutan) {
+    throw StateError('Gagal mengemas kini nombor turutan');
+  }
+}
+
 }
   final List<_ItemKerja> items = [_ItemKerja()];
 
