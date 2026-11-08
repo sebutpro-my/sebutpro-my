@@ -1,4 +1,6 @@
 
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -38,6 +40,29 @@ class JanaPdf {
     Map<String, dynamic> data,
   ) async {
     final pdf = pw.Document();
+    
+final prefs = await SharedPreferences.getInstance();
+final teksProfil = prefs.getString('profil_syarikat');
+
+final Map<String, dynamic> profil = {};
+
+if (teksProfil != null) {
+  final hasil = jsonDecode(teksProfil);
+  if (hasil is Map) {
+    profil.addAll(Map<String, dynamic>.from(hasil));
+  }
+}
+
+final namaSyarikat =
+    profil['nama']?.toString() ?? '';
+final ssmSyarikat =
+    profil['ssm']?.toString() ?? '';
+final alamatSyarikat =
+    profil['alamat']?.toString() ?? '';
+final telefonSyarikat =
+    profil['telefon']?.toString() ?? '';
+final emelSyarikat =
+    profil['emel']?.toString() ?? '';
 
     final tajuk = data['tajuk']?.toString() ?? '-';
     final pelanggan =
@@ -87,29 +112,56 @@ class JanaPdf {
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(32),
         build: (context) => [
-          pw.Center(
-            child: pw.Column(
-              children: [
-                pw.Text(
-                  'SEBUTPRO MY',
-                  style: pw.TextStyle(
-                    fontSize: 18,
-                    fontWeight: pw.FontWeight.bold,
-                    color: PdfColors.blue900,
-                  ),
-                ),
-                pw.SizedBox(height: 6),
-                pw.Text(
-                  'SEBUT HARGA',
-                  style: pw.TextStyle(
-                    fontSize: 16,
-                    fontWeight: pw.FontWeight.bold,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          pw.SizedBox(height: 20),
+          
+pw.Center(
+  child: pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.center,
+    children: [
+      pw.Text(
+        namaSyarikat.isNotEmpty
+            ? namaSyarikat
+            : 'NAMA SYARIKAT BELUM DIISI',
+        textAlign: pw.TextAlign.center,
+        style: pw.TextStyle(
+          fontSize: 18,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.blue900,
+        ),
+      ),
+      if (ssmSyarikat.isNotEmpty)
+        pw.Text(
+          'No. SSM: $ssmSyarikat',
+          textAlign: pw.TextAlign.center,
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      if (alamatSyarikat.isNotEmpty)
+        pw.Text(
+          alamatSyarikat,
+          textAlign: pw.TextAlign.center,
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      if (telefonSyarikat.isNotEmpty)
+        pw.Text(
+          'Tel: $telefonSyarikat',
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      if (emelSyarikat.isNotEmpty)
+        pw.Text(
+          'E-mel: $emelSyarikat',
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      pw.SizedBox(height: 14),
+      pw.Text(
+        'SEBUT HARGA',
+        style: pw.TextStyle(
+          fontSize: 16,
+          fontWeight: pw.FontWeight.bold,
+        ),
+      ),
+    ],
+  ),
+),
+
           pw.Divider(),
           pw.Text('Pelanggan: $pelanggan'),
           pw.Text('Tarikh: $tarikhDokumen'),
