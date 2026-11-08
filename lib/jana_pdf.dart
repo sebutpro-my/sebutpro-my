@@ -64,6 +64,18 @@ final telefonSyarikat =
 final emelSyarikat =
     profil['emel']?.toString() ?? '';
 
+final namaBank =
+    profil['bank']?.toString().trim() ?? '';
+final pemegangAkaun =
+    profil['pemegangAkaun']?.toString().trim() ?? '';
+final nomborAkaun =
+    profil['nomborAkaun']?.toString().trim() ?? '';
+
+final adaMaklumatBank =
+    namaBank.isNotEmpty ||
+    pemegangAkaun.isNotEmpty ||
+    nomborAkaun.isNotEmpty;
+
     final tajuk = data['tajuk']?.toString() ?? '-';
     final pelanggan =
         data['pelanggan']?.toString() ?? '-';
@@ -217,7 +229,42 @@ pw.Center(
               ),
             ),
           ),
-          pw.SizedBox(height: 30),
+          
+pw.SizedBox(height: 24),
+
+if (adaMaklumatBank)
+  pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        'MAKLUMAT PEMBAYARAN',
+        style: pw.TextStyle(
+          fontSize: 11,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.blue900,
+        ),
+      ),
+      pw.SizedBox(height: 8),
+      if (namaBank.isNotEmpty)
+        pw.Text(
+          'Nama Bank: $namaBank',
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      if (pemegangAkaun.isNotEmpty)
+        pw.Text(
+          'Pemegang Akaun: $pemegangAkaun',
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+      if (nomborAkaun.isNotEmpty)
+        pw.Text(
+          'No. Akaun: $nomborAkaun',
+          style: const pw.TextStyle(fontSize: 9),
+        ),
+    ],
+  ),
+
+pw.SizedBox(height: 24),
+
           pw.Divider(),
           pw.Text(
             'Dokumen dijana menggunakan SebutPro MY.',
