@@ -1,4 +1,5 @@
 
+import 'tetapan_rujukan_page.dart';
 import 'profil_syarikat_page.dart';
 import 'package:flutter/material.dart';
 import 'sebut_harga_page.dart';
@@ -91,7 +92,14 @@ class DashboardPage extends StatelessWidget {
             Icons.business_outlined,
             'Profil Syarikat',
             'Logo, alamat dan maklumat bank',
-          ),
+          ),         
+_menu(
+  context,
+  Icons.numbers_outlined,
+  'Tetapan Nombor Rujukan',
+  'Format rujukan manual atau automatik',
+),
+
         ],
       ),
     );
@@ -146,17 +154,19 @@ onTap: () {
     ),
   );
 
+} else if (title == 'Tetapan Nombor Rujukan') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const TetapanRujukanPage(),
+    ),
+  );
 } else {
+ScaffoldMessenger.of(context).showSnackBar(
+  SnackBar(
+    content: Text('$title - Akan dibangunkan'),
+  ),
+);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$title - Akan dibangunkan'),
-      ),
-    );
-  }
-},
-
-      ),
-    );
-  }
+}
 }
