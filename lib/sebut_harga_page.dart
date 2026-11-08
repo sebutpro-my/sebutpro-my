@@ -367,8 +367,6 @@ class _SebutHargaPageState extends State<SebutHargaPage> {
       );
       
 Navigator.of(context).pop(true);
-
-}
     } catch (e) {
       if (!mounted) return;
 
