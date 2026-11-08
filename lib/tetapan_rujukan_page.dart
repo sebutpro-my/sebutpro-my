@@ -138,33 +138,33 @@ class _TetapanRujukanPageState
                 ),
                 const SizedBox(height: 12),
 
-                RadioListTile<String>(
-                  title: const Text('Manual'),
-                  subtitle: const Text(
-                    'Isi nombor rujukan sendiri',
-                  ),
-                  value: 'manual',
-                  groupValue: mod,
-                  onChanged: (nilai) {
-                    if (nilai != null) {
-                      setState(() => mod = nilai);
-                    }
-                  },
-                ),
-
-                RadioListTile<String>(
-                  title: const Text('Automatik'),
-                  subtitle: const Text(
-                    'Gunakan format dan turutan syarikat',
-                  ),
-                  value: 'auto',
-                  groupValue: mod,
-                  onChanged: (nilai) {
-                    if (nilai != null) {
-                      setState(() => mod = nilai);
-                    }
-                  },
-                ),
+                
+RadioGroup<String>(
+  groupValue: mod,
+  onChanged: (nilai) {
+    if (nilai != null) {
+      setState(() => mod = nilai);
+    }
+  },
+  child: Column(
+    children: [
+      RadioListTile<String>(
+        title: const Text('Manual'),
+        subtitle: const Text(
+          'Isi nombor rujukan sendiri',
+        ),
+        value: 'manual',
+      ),
+      RadioListTile<String>(
+        title: const Text('Automatik'),
+        subtitle: const Text(
+          'Gunakan format dan turutan syarikat',
+        ),
+        value: 'auto',
+      ),
+    ],
+  ),
+),
 
                 if (mod == 'auto') ...[
                   const SizedBox(height: 16),
