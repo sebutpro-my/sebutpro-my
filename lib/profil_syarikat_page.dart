@@ -102,14 +102,17 @@ class _ProfilSyarikatPageState
       if (!berjaya) {
         throw StateError('Gagal menyimpan profil');
       }
+      
+if (!mounted) return;
 
-      if (!mounted) return;
+ScaffoldMessenger.of(context).showSnackBar(
+  const SnackBar(
+    content: Text('Profil syarikat berjaya disimpan'),
+  ),
+);
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Profil syarikat berjaya disimpan'),
-        ),
-      );
+Navigator.of(context).pop(true);
+
     } catch (e) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
