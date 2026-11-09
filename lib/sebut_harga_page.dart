@@ -76,6 +76,32 @@ Uint8List? tandatanganPelanggan;
     tajuk.text = data['tajuk']?.toString() ?? '';
     rujukan.text = data['rujukan']?.toString() ?? '';
     
+final gambarKontraktor =
+    data['tandatangan_kontraktor']?.toString();
+
+if (gambarKontraktor != null &&
+    gambarKontraktor.isNotEmpty) {
+  try {
+    tandatanganKontraktor =
+        base64Decode(gambarKontraktor);
+  } on FormatException {
+    tandatanganKontraktor = null;
+  }
+}
+
+final gambarPelanggan =
+    data['tandatangan_pelanggan']?.toString();
+
+if (gambarPelanggan != null &&
+    gambarPelanggan.isNotEmpty) {
+  try {
+    tandatanganPelanggan =
+        base64Decode(gambarPelanggan);
+  } on FormatException {
+    tandatanganPelanggan = null;
+  }
+}
+
 deposit.text =
     data['deposit']?.toString() ?? '30';
 
@@ -168,7 +194,15 @@ final data = {
     'pelanggan': pelanggan.text,
     'tajuk': tajuk.text,
     'rujukan': rujukan.text.trim(),
-    'deposit': deposit.text.trim(),
+    
+'tandatangan_kontraktor': tandatanganKontraktor == null
+    ? null
+    : base64Encode(tandatanganKontraktor!),
+
+'tandatangan_pelanggan': tandatanganPelanggan == null
+    ? null
+    : base64Encode(tandatanganPelanggan!),
+'deposit': deposit.text.trim(),
     'tempoh_sah': tempohSah.text.trim(),
     'terma_pembayaran': termaPembayaran.text.trim(),
     'tarikh': DateTime.now().toIso8601String(),
