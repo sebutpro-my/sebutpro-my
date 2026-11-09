@@ -2,6 +2,8 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'dart:typed_data';
+import 'signature_pad_page.dart';
 
 class SebutHargaPage extends StatefulWidget {
   final Map<String, dynamic>? rekodEdit;
@@ -58,6 +60,9 @@ final termaPembayaran = TextEditingController(
       'dimulakan. Baki bayaran dijelaskan selepas '
       'kerja siap.',
 );
+
+Uint8List? tandatanganKontraktor;
+Uint8List? tandatanganPelanggan;
 
   @override
   void initState() {
@@ -301,6 +306,26 @@ if (widget.indeksEdit == null && modRujukan == 'auto') {
     super.dispose();
   }
 
+Future<void> bukaTandatangan({
+  required bool kontraktor,
+}) async {
+  final gambar = await Navigator.of(context).push<Uint8List>(
+    MaterialPageRoute(
+      builder: (_) => const SignaturePadPage(),
+    ),
+  );
+
+  if (!mounted || gambar == null) return;
+
+  setState(() {
+    if (kontraktor) {
+      tandatanganKontraktor = gambar;
+    } else {
+      tandatanganPelanggan = gambar;
+    }
+  });
+}
+
   Widget medan(
     String label,
     TextEditingController controller, {
@@ -522,6 +547,80 @@ medan(
             ),
           ),
           const SizedBox(height: 20),
+          
+const SizedBox(height: 24),
+
+const Text(
+  'Tandatangan',
+  style: TextStyle(
+    fontSize: 19,
+    fontWeight: FontWeight.bold,
+  ),
+),
+const SizedBox(height: 12),
+
+OutlinedButton.icon(
+  onPressed: () => bukaTandatangan(
+    kontraktor: true,
+  ),
+  icon: const Icon(Icons.draw_outlined),
+  label: Text(
+    tandatanganKontraktor == null
+        ? 'Tambah Tandatangan Kontraktor'
+        : 'Tukar Tandatangan Kontraktor',
+  ),
+),
+
+if (tandatanganKontraktor != null) ...[
+  const SizedBox(height: 8),
+  Image.memory(
+    tandatanganKontraktor!,
+    height: 100,
+  ),
+  TextButton.icon(
+    onPressed: () {
+      setState(() {
+        tandatanganKontraktor = null;
+      });
+    },
+    icon: const Icon(Icons.delete_outline),
+    label: const Text('Padam Tandatangan Kontraktor'),
+  ),
+],
+
+const SizedBox(height: 12),
+
+OutlinedButton.icon(
+  onPressed: () => bukaTandatangan(
+    kontraktor: false,
+  ),
+  icon: const Icon(Icons.draw_outlined),
+  label: Text(
+    tandatanganPelanggan == null
+        ? 'Tambah Tandatangan Pelanggan'
+        : 'Tukar Tandatangan Pelanggan',
+  ),
+),
+
+if (tandatanganPelanggan != null) ...[
+  const SizedBox(height: 8),
+  Image.memory(
+    tandatanganPelanggan!,
+    height: 100,
+  ),
+  TextButton.icon(
+    onPressed: () {
+      setState(() {
+        tandatanganPelanggan = null;
+      });
+    },
+    icon: const Icon(Icons.delete_outline),
+    label: const Text('Padam Tandatangan Pelanggan'),
+  ),
+],
+
+const SizedBox(height: 20),
+
         ElevatedButton.icon(
   onPressed: () async {
     final messenger = ScaffoldMessenger.of(context);
