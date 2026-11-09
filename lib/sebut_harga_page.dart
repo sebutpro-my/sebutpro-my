@@ -608,10 +608,22 @@ OutlinedButton.icon(
 
 if (tandatanganKontraktor != null) ...[
   const SizedBox(height: 8),
-  Image.memory(
-    tandatanganKontraktor!,
-    height: 100,
-  ),
+  
+Image.memory(
+  tandatanganKontraktor!,
+  key: ValueKey(tandatanganKontraktor),
+  height: 120,
+  width: double.infinity,
+  fit: BoxFit.contain,
+  gaplessPlayback: false,
+  errorBuilder: (context, error, stackTrace) {
+    return Text(
+      'Gagal memaparkan tandatangan kontraktor: $error',
+      style: const TextStyle(color: Colors.red),
+    );
+  },
+),
+
   TextButton.icon(
     onPressed: () {
       setState(() {
@@ -639,10 +651,22 @@ OutlinedButton.icon(
 
 if (tandatanganPelanggan != null) ...[
   const SizedBox(height: 8),
-  Image.memory(
-    tandatanganPelanggan!,
-    height: 100,
-  ),
+  
+Image.memory(
+  tandatanganPelanggan!,
+  key: ValueKey(tandatanganPelanggan),
+  height: 120,
+  width: double.infinity,
+  fit: BoxFit.contain,
+  gaplessPlayback: false,
+  errorBuilder: (context, error, stackTrace) {
+    return Text(
+      'Gagal memaparkan tandatangan pelanggan: $error',
+      style: const TextStyle(color: Colors.red),
+    );
+  },
+),
+
   TextButton.icon(
     onPressed: () {
       setState(() {
