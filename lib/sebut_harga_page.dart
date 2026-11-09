@@ -309,22 +309,57 @@ if (widget.indeksEdit == null && modRujukan == 'auto') {
 Future<void> bukaTandatangan({
   required bool kontraktor,
 }) async {
-  final gambar = await Navigator.of(context).push<Uint8List>(
-    MaterialPageRoute(
-      builder: (_) => const SignaturePadPage(),
-    ),
-  );
+  try {
+    final Uint8List? gambar =
+        await Navigator.of(context).push<Uint8List>(
+      MaterialPageRoute<Uint8List>(
+        builder: (context) =>
+            const SignaturePadPage(),
+      ),
+    );
 
-  if (!mounted || gambar == null) return;
+    if (!mounted) return;
 
-  setState(() {
-    if (kontraktor) {
-      tandatanganKontraktor = gambar;
-    } else {
-      tandatanganPelanggan = gambar;
+    if (gambar == null || gambar.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Tiada imej tandatangan diterima',
+          ),
+        ),
+      );
+      return;
     }
-  });
+
+    setState(() {
+      if (kontraktor) {
+        tandatanganKontraktor = gambar;
+      } else {
+        tandatanganPelanggan = gambar;
+      }
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Imej tandatangan diterima: '
+          '${gambar.length} bytes',
+        ),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Ralat tandatangan: $e',
+        ),
+      ),
+    );
+  }
 }
+
 
   Widget medan(
     String label,
