@@ -1,5 +1,6 @@
 
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -90,6 +91,27 @@ final tempohSah =
 
 final termaPembayaran =
     data['terma_pembayaran']?.toString().trim() ?? '';
+
+Uint8List? bacaTandatangan(String kunci) {
+  final teks = data[kunci]?.toString();
+
+  if (teks == null || teks.isEmpty) {
+    return null;
+  }
+
+  try {
+    final bytes = base64Decode(teks);
+    return bytes.isEmpty ? null : bytes;
+  } on FormatException {
+    return null;
+  }
+}
+
+final tandatanganKontraktor =
+    bacaTandatangan('tandatangan_kontraktor');
+
+final tandatanganPelanggan =
+    bacaTandatangan('tandatangan_pelanggan');
 final tarikhDokumen = tarikh(data['tarikh']);
 
     final items = data['items'] is List
@@ -329,6 +351,79 @@ if (adaMaklumatBank)
   ),
 
 pw.SizedBox(height: 24),
+
+if (tandatanganKontraktor != null ||
+    tandatanganPelanggan != null)
+  pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Text(
+        'TANDATANGAN',
+        style: pw.TextStyle(
+          fontSize: 11,
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.blue900,
+        ),
+      ),
+      pw.SizedBox(height: 12),
+      pw.Row(
+        crossAxisAlignment:
+            pw.CrossAxisAlignment.start,
+        children: [
+          pw.Expanded(
+            child: pw.Column(
+              children: [
+                if (tandatanganKontraktor != null)
+                  pw.Image(
+                    pw.MemoryImage(
+                      tandatanganKontraktor,
+                    ),
+                    height: 65,
+                    fit: pw.BoxFit.contain,
+                  )
+                else
+                  pw.SizedBox(height: 65),
+                pw.SizedBox(height: 8),
+                pw.Divider(),
+                pw.Text(
+                  'Tandatangan Kontraktor',
+                  style: const pw.TextStyle(
+                    fontSize: 9,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          pw.SizedBox(width: 24),
+          pw.Expanded(
+            child: pw.Column(
+              children: [
+                if (tandatanganPelanggan != null)
+                  pw.Image(
+                    pw.MemoryImage(
+                      tandatanganPelanggan,
+                    ),
+                    height: 65,
+                    fit: pw.BoxFit.contain,
+                  )
+                else
+                  pw.SizedBox(height: 65),
+                pw.SizedBox(height: 8),
+                pw.Divider(),
+                pw.Text(
+                  'Tandatangan Pelanggan',
+                  style: const pw.TextStyle(
+                    fontSize: 9,
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+      pw.SizedBox(height: 16),
+    ],
+  ),
 
           pw.Divider(),
           pw.Text(
