@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'invois_page.dart';
 
 class ButiranInvoisPage extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -166,7 +167,29 @@ class ButiranInvoisPage extends StatelessWidget {
           ),
 
           const SizedBox(height: 24),
-        ],
+        
+ElevatedButton.icon(
+  onPressed: () async {
+    final berjaya = await Navigator.push<bool>(
+      context,
+      MaterialPageRoute(
+        builder: (context) => InvoisPage(
+          invoisAsal: data,
+        ),
+      ),
+    );
+
+    if (!context.mounted) return;
+
+    if (berjaya == true) {
+      Navigator.pop(context, true);
+    }
+  },
+  icon: const Icon(Icons.edit_outlined),
+  label: const Text('Edit Invois'),
+),
+          
+],
       ),
     );
   }
