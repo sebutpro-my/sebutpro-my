@@ -121,16 +121,24 @@ class _SenaraiInvoisPageState
                           bottom: 12,
                         ),
                         child: ListTile(
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ButiranInvoisPage(
-                                  data: data,
-                                ),
-                              ),
-                            );
-                          },
+                          
+onTap: () async {
+  final berjaya = await Navigator.push<bool>(
+    context,
+    MaterialPageRoute(
+      builder: (context) => ButiranInvoisPage(
+        data: data,
+      ),
+    ),
+  );
+
+  if (!mounted) return;
+
+  if (berjaya == true) {
+    await muatInvois();
+  }
+},
+
                           title: Text(
                             nombor,
                             style: const TextStyle(
