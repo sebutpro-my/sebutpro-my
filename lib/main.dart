@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'sebut_harga_page.dart';
 import 'senarai_sebut_harga_page.dart';
 import 'invois_page.dart';
+import 'senarai_invois_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -82,7 +83,13 @@ class DashboardPage extends StatelessWidget {
             'Invois',
             'Urus invois pelanggan',
           ),
-          _menu(
+         _menu(
+           context,
+           Icons.folder_open_outlined,
+           'Senarai Invois',
+           'Lihat invois yang telah disimpan',
+          ),
+         _menu(
             context,
             Icons.people_outline,
             'Pelanggan',
@@ -170,7 +177,15 @@ onTap: () {
           builder: (context) => const InvoisPage(),
         ),
       );
-    } else {
+    
+} else if (title == 'Senarai Invois') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SenaraiInvoisPage(),
+    ),
+  );
+} else {
 
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
