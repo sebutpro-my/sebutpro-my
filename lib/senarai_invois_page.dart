@@ -122,8 +122,9 @@ class _SenaraiInvoisPageState
                         ),
                         child: ListTile(
                           
+
 onTap: () async {
-  final berjaya = await Navigator.push<bool>(
+  await Navigator.push<bool>(
     context,
     MaterialPageRoute(
       builder: (context) => ButiranInvoisPage(
@@ -131,6 +132,11 @@ onTap: () async {
       ),
     ),
   );
+
+  if (!mounted) return;
+
+  await muatInvois();
+},
 
   if (!mounted) return;
 
