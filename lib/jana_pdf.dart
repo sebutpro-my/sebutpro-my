@@ -77,6 +77,27 @@ final adaMaklumatBank =
     pemegangAkaun.isNotEmpty ||
     nomborAkaun.isNotEmpty;
 
+Uint8List? bacaImejProfil(String kunci) {
+  final teks = profil[kunci]?.toString();
+
+  if (teks == null || teks.isEmpty) {
+    return null;
+  }
+
+  try {
+    final bytes = base64Decode(teks);
+    return bytes.isEmpty ? null : bytes;
+  } on FormatException {
+    return null;
+  }
+}
+
+final logoSyarikat =
+    bacaImejProfil('logo_syarikat');
+
+final copSyarikat =
+    bacaImejProfil('cop_syarikat');
+
     final tajuk = data['tajuk']?.toString() ?? '-';
     final rujukan = data['rujukan']?.toString() ?? '';
     final pelanggan =
@@ -170,7 +191,18 @@ pw.Center(
   child: pw.Column(
     crossAxisAlignment: pw.CrossAxisAlignment.center,
     children: [
-      pw.Text(
+      
+if (logoSyarikat != null) ...[
+  pw.Image(
+    pw.MemoryImage(logoSyarikat),
+    height: 55,
+    width: 110,
+    fit: pw.BoxFit.contain,
+  ),
+  pw.SizedBox(height: 8),
+],
+      
+pw.Text(
         namaSyarikat.isNotEmpty
             ? namaSyarikat
             : 'NAMA SYARIKAT BELUM DIISI',
@@ -353,7 +385,9 @@ if (adaMaklumatBank)
 pw.SizedBox(height: 24),
 
 if (tandatanganKontraktor != null ||
-    tandatanganPelanggan != null)
+    tandatanganPelanggan != null ||
+    copSyarikat != null)
+
   pw.Column(
     crossAxisAlignment: pw.CrossAxisAlignment.start,
     children: [
@@ -383,7 +417,18 @@ if (tandatanganKontraktor != null ||
                   )
                 else
                   pw.SizedBox(height: 65),
-                pw.SizedBox(height: 8),
+                
+if (copSyarikat != null) ...[
+  pw.SizedBox(height: 6),
+  pw.Image(
+    pw.MemoryImage(copSyarikat),
+    height: 55,
+    width: 100,
+    fit: pw.BoxFit.contain,
+  ),
+],
+                
+pw.SizedBox(height: 8),
                 pw.Divider(),
                 pw.Text(
                   'Tandatangan Kontraktor',
