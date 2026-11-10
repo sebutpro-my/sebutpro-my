@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoisPage extends StatefulWidget {
   const InvoisPage({super.key});
@@ -73,7 +75,117 @@ class _InvoisPageState extends State<InvoisPage> {
     return 'RM $depan.${bahagian[1]}';
   }
 
-  void tambahItem() {
+bool sedangSimpan = false;
+
+Future<void> simpanInvois() async {
+  if (sedangSimpan) return;
+
+  if (nomborInvois.text.trim().isEmpty ||
+      pelanggan.text.trim().isEmpty ||
+      tajuk.text.trim().isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Sila lengkapkan nombor invois, pelanggan dan tajuk kerja.',
+        ),
+      ),
+    );
+    return;
+  }
+
+  if (items.any((item) =>
+      item.butiran.text.trim().isEmpty ||
+      (double.tryParse(item.kuantiti.text.trim()) ?? 0) <= 0 ||
+      (double.tryParse(item.kadar.text.trim()) ?? -1) < 0)) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Sila semak butiran, kuantiti dan kadar item kerja.',
+        ),
+      ),
+    );
+    return;
+  }
+
+  setState(() => sedangSimpan = true);
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+    final senarai = prefs.getStringList('senarai_invois') ?? [];
+
+    final rujukan = nomborInvois.text.trim();
+
+    for (final teks in senarai) {
+      final rekod = jsonDecode(teks);
+
+      if (rekod is Map &&
+          rekod['nombor_invois']
+                  ?.toString()
+                  .trim()
+                  .toLowerCase() ==
+              rujukan.toLowerCase()) {
+        throw StateError(
+          'Nombor invois ini telah digunakan.',
+        );
+      }
+    }
+
+    final data = {
+      'id': DateTime.now().microsecondsSinceEpoch.toString(),
+      'nombor_invois': rujukan,
+      'pelanggan': pelanggan.text.trim(),
+      'tajuk': tajuk.text.trim(),
+      'tarikh': DateTime.now().toIso8601String(),
+      'items': items.map((item) => {
+        'butiran': item.butiran.text.trim(),
+        'unit': item.unit,
+        'kuantiti': item.kuantiti.text.trim(),
+        'kadar': item.kadar.text.trim(),
+      }).toList(),
+      'jumlah': jumlahKeseluruhan,
+      'status': 'Belum Bayar',
+    };
+
+    senarai.add(jsonEncode(data));
+
+    final berjaya = await prefs.setStringList(
+      'senarai_invois',
+      senarai,
+    );
+
+    if (!berjaya) {
+      throw StateError('Gagal menyimpan invois.');
+    }
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Invois berjaya disimpan.'),
+      ),
+    );
+
+    Navigator.of(context).pop(true);
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          e is StateError
+              ? e.message.toString()
+              : 'Gagal menyimpan invois.',
+        ),
+      ),
+    );
+  } finally {
+    if (mounted) {
+      setState(() => sedangSimpan = false);
+    }
+  }
+}
+  
+void tambahItem() {
     setState(() {
       items.add(_ItemInvois());
     });
@@ -270,7 +382,19 @@ class _InvoisPageState extends State<InvoisPage> {
           ),
 
           const SizedBox(height: 20),
-        ],
+        
+ElevatedButton.icon(
+  onPressed: sedangSimpan ? null : simpanInvois,
+  icon: const Icon(Icons.save_outlined),
+  label: Text(
+    sedangSimpan
+        ? 'Sedang Menyimpan...'
+        : 'Simpan Invois',
+  ),
+),
+
+const SizedBox(height: 24),
+],
       ),
     );
   }
