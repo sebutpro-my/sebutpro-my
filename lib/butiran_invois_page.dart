@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 import 'invois_page.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class ButiranInvoisPage extends StatelessWidget {
   final Map<String, dynamic> data;
@@ -31,7 +33,98 @@ class ButiranInvoisPage extends StatelessWidget {
     return 'RM $depan.${bahagian[1]}';
   }
 
-  @override
+Future<void> padamInvois(BuildContext context) async {
+  final idAsal = data['id']?.toString();
+
+  if (idAsal == null || idAsal.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('ID invois tidak sah.'),
+      ),
+    );
+    return;
+  }
+
+  final sahkan = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Padam Invois?'),
+      content: const Text(
+        'Adakah anda pasti mahu memadam invois ini? '
+        'Tindakan ini tidak boleh dibatalkan.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, false);
+          },
+          child: const Text('Batal'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, true);
+          },
+          child: const Text(
+            'Padam',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (sahkan != true || !context.mounted) return;
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+
+    final senarai =
+        prefs.getStringList('senarai_invois') ?? [];
+
+    final indexAsal = senarai.indexWhere((teks) {
+      try {
+        final rekod = jsonDecode(teks);
+        return rekod is Map &&
+            rekod['id']?.toString() == idAsal;
+      } catch (_) {
+        return false;
+      }
+    });
+
+    if (indexAsal == -1) {
+      throw StateError('Rekod invois tidak dijumpai.');
+    }
+
+    senarai.removeAt(indexAsal);
+
+    final berjaya = await prefs.setStringList(
+      'senarai_invois',
+      senarai,
+    );
+
+    if (!berjaya) {
+      throw StateError('Gagal memadam invois.');
+    }
+
+    if (!context.mounted) return;
+
+    Navigator.pop(context, true);
+  } catch (e) {
+    if (!context.mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          e is StateError
+              ? e.message.toString()
+              : 'Gagal memadam invois.',
+        ),
+      ),
+    );
+  }
+}
+  
+@override
   Widget build(BuildContext context) {
     final noInvois =
         data['nombor_invois']?.toString() ?? '-';
@@ -189,6 +282,18 @@ ElevatedButton.icon(
   label: const Text('Edit Invois'),
 ),
           
+const SizedBox(height: 12),
+
+OutlinedButton.icon(
+  onPressed: () => padamInvois(context),
+  icon: const Icon(Icons.delete_outline),
+  label: const Text('Padam Invois'),
+  style: OutlinedButton.styleFrom(
+    foregroundColor: Colors.red,
+    side: const BorderSide(color: Colors.red),
+  ),
+),
+
 ],
       ),
     );
