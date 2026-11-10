@@ -4,6 +4,7 @@ import 'profil_syarikat_page.dart';
 import 'package:flutter/material.dart';
 import 'sebut_harga_page.dart';
 import 'senarai_sebut_harga_page.dart';
+import 'invois_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -162,7 +163,15 @@ onTap: () {
     ),
   );
 
-} else {
+    } else if (title == 'Invois') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const InvoisPage(),
+        ),
+      );
+    } else {
+
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text('$title - Akan dibangunkan'),
