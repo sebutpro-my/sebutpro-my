@@ -138,13 +138,6 @@ onTap: () async {
   await muatInvois();
 },
 
-  if (!mounted) return;
-
-  if (berjaya == true) {
-    await muatInvois();
-  }
-},
-
                           title: Text(
                             nombor,
                             style: const TextStyle(
