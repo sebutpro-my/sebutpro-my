@@ -488,11 +488,14 @@ void tambahItem() {
 ElevatedButton.icon(
   onPressed: sedangSimpan ? null : simpanInvois,
   icon: const Icon(Icons.save_outlined),
-  label: Text(
-    sedangSimpan
-        ? 'Sedang Menyimpan...'
-        : 'Simpan Invois',
-  ),
+  
+label: Text(
+  sedangSimpan
+      ? 'Sedang Menyimpan...'
+      : widget.invoisAsal != null
+          ? 'Simpan Perubahan'
+          : 'Simpan Invois',
+),
 ),
 
 const SizedBox(height: 24),
