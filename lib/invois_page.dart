@@ -4,7 +4,12 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class InvoisPage extends StatefulWidget {
-  const InvoisPage({super.key});
+  final Map<String, dynamic>? invoisAsal;
+
+  const InvoisPage({
+    super.key,
+    this.invoisAsal,
+  });
 
   @override
   State<InvoisPage> createState() => _InvoisPageState();
@@ -77,6 +82,62 @@ class _InvoisPageState extends State<InvoisPage> {
 
 bool sedangSimpan = false;
 
+@override
+void initState() {
+  super.initState();
+
+  final data = widget.invoisAsal;
+
+  if (data == null) return;
+
+  nomborInvois.text =
+      data['nombor_invois']?.toString() ?? '';
+
+  pelanggan.text =
+      data['pelanggan']?.toString() ?? '';
+
+  tajuk.text =
+      data['tajuk']?.toString() ?? '';
+
+  final itemAsal = data['items'];
+
+  if (itemAsal is List && itemAsal.isNotEmpty) {
+    for (final item in items) {
+      item.dispose();
+    }
+
+    items.clear();
+
+    for (final rekod in itemAsal) {
+      if (rekod is! Map) continue;
+
+      final item = _ItemInvois();
+
+      item.butiran.text =
+          rekod['butiran']?.toString() ?? '';
+
+      item.kuantiti.text =
+          rekod['kuantiti']?.toString() ?? '';
+
+      item.kadar.text =
+          rekod['kadar']?.toString() ?? '';
+
+      final unitAsal =
+          rekod['unit']?.toString() ?? 'unit';
+
+      item.unit = units.contains(unitAsal)
+          ? unitAsal
+          : 'unit';
+
+      items.add(item);
+    }
+
+    if (items.isEmpty) {
+      items.add(_ItemInvois());
+    }
+  }
+}
+  
 Future<void> simpanInvois() async {
   if (sedangSimpan) return;
 
