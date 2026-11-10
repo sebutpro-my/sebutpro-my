@@ -176,27 +176,48 @@ Future<void> simpanInvois() async {
 
     final rujukan = nomborInvois.text.trim();
 
-    for (final teks in senarai) {
-      final rekod = jsonDecode(teks);
+    
+final invoisAsal = widget.invoisAsal;
+final idAsal = invoisAsal?['id']?.toString();
 
-      if (rekod is Map &&
-          rekod['nombor_invois']
-                  ?.toString()
-                  .trim()
-                  .toLowerCase() ==
-              rujukan.toLowerCase()) {
-        throw StateError(
-          'Nombor invois ini telah digunakan.',
-        );
-      }
-    }
+if (invoisAsal != null &&
+    (idAsal == null || idAsal.isEmpty)) {
+  throw StateError(
+    'ID invois asal tidak sah.',
+  );
+}
+
+for (final teks in senarai) {
+  final rekod = jsonDecode(teks);
+
+  if (rekod is! Map) continue;
+
+  // Abaikan invois sendiri semasa menyemak pendua.
+  if (idAsal != null &&
+      rekod['id']?.toString() == idAsal) {
+    continue;
+  }
+
+  if (rekod['nombor_invois']
+          ?.toString()
+          .trim()
+          .toLowerCase() ==
+      rujukan.toLowerCase()) {
+    throw StateError(
+      'Nombor invois ini telah digunakan.',
+    );
+  }
+}
 
     final data = {
-      'id': DateTime.now().microsecondsSinceEpoch.toString(),
+      
+      'id': idAsal ??
+          DateTime.now().microsecondsSinceEpoch.toString(),
       'nombor_invois': rujukan,
       'pelanggan': pelanggan.text.trim(),
       'tajuk': tajuk.text.trim(),
-      'tarikh': DateTime.now().toIso8601String(),
+      'tarikh': invoisAsal?['tarikh'] ??
+          DateTime.now().toIso8601String(),
       'items': items.map((item) => {
         'butiran': item.butiran.text.trim(),
         'unit': item.unit,
@@ -204,10 +225,30 @@ Future<void> simpanInvois() async {
         'kadar': item.kadar.text.trim(),
       }).toList(),
       'jumlah': jumlahKeseluruhan,
-      'status': 'Belum Bayar',
+      'status': invoisAsal?['status'] ?? 'Belum Bayar',
     };
+ 
+if (invoisAsal == null) {
+  // Invois baharu.
+  senarai.add(jsonEncode(data));
+} else {
+  // Cari invois asal menggunakan ID.
+  final indexAsal = senarai.indexWhere((teks) {
+    final rekod = jsonDecode(teks);
 
-    senarai.add(jsonEncode(data));
+    return rekod is Map &&
+        rekod['id']?.toString() == idAsal;
+  });
+
+  if (indexAsal == -1) {
+    throw StateError(
+      'Rekod invois asal tidak dijumpai.',
+    );
+  }
+
+  // Kemas kini rekod yang sama.
+  senarai[indexAsal] = jsonEncode(data);
+}
 
     final berjaya = await prefs.setStringList(
       'senarai_invois',
