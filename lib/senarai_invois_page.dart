@@ -4,6 +4,8 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'butiran_invois_page.dart';
+
 class SenaraiInvoisPage extends StatefulWidget {
   const SenaraiInvoisPage({super.key});
 
@@ -119,6 +121,16 @@ class _SenaraiInvoisPageState
                           bottom: 12,
                         ),
                         child: ListTile(
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ButiranInvoisPage(
+                                  data: data,
+                                ),
+                              ),
+                            );
+                          },
                           title: Text(
                             nombor,
                             style: const TextStyle(
