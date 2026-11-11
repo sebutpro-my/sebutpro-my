@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'invois_page.dart';
 import 'jana_pdf_invois.dart';
+import 'rekod_bayaran_page.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -335,6 +336,31 @@ Card(
       ],
     ),
   ),
+),
+
+const SizedBox(height: 12),
+
+ElevatedButton.icon(
+  onPressed: bakiBayaran <= 0
+      ? null
+      : () async {
+          final berjaya = await Navigator.push<bool>(
+            context,
+            MaterialPageRoute(
+              builder: (context) => RekodBayaranPage(
+                invois: data,
+              ),
+            ),
+          );
+
+          if (!context.mounted) return;
+
+          if (berjaya == true) {
+            Navigator.pop(context, true);
+          }
+        },
+  icon: const Icon(Icons.payments_outlined),
+  label: const Text('Rekod Bayaran'),
 ),
 
           const SizedBox(height: 24),
