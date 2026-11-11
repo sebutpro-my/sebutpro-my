@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'invois_page.dart';
+import 'jana_pdf_invois.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -292,6 +293,28 @@ OutlinedButton.icon(
     foregroundColor: Colors.red,
     side: const BorderSide(color: Colors.red),
   ),
+),
+
+const SizedBox(height: 12),
+
+ElevatedButton.icon(
+  onPressed: () async {
+    try {
+      await JanaPdfInvois.jana(data);
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Gagal menjana PDF Invois.',
+          ),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.picture_as_pdf_outlined),
+  label: const Text('Jana PDF Invois'),
 ),
 
 ],
