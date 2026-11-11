@@ -141,6 +141,32 @@ Future<void> padamInvois(BuildContext context) async {
 
     final itemAsal = data['items'];
     final items = itemAsal is List ? itemAsal : [];
+    
+final jumlahInvois = nombor(data['jumlah']);
+
+final rekodAsal = data['rekod_bayaran'];
+final rekodBayaran =
+    rekodAsal is List ? rekodAsal : [];
+
+double jumlahDibayar = 0;
+
+for (final rekod in rekodBayaran) {
+  if (rekod is Map) {
+    jumlahDibayar += nombor(rekod['jumlah']);
+  }
+}
+
+final bakiBayaran =
+    (jumlahInvois - jumlahDibayar).clamp(
+  0.0,
+  double.infinity,
+);
+
+final statusBayaran = jumlahDibayar <= 0
+    ? 'Belum Bayar'
+    : bakiBayaran > 0
+        ? 'Bayar Sebahagian'
+        : 'Selesai Bayar';
 
     return Scaffold(
       appBar: AppBar(
@@ -259,6 +285,57 @@ Future<void> padamInvois(BuildContext context) async {
               ),
             ),
           ),
+
+const SizedBox(height: 16),
+
+Card(
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'RINGKASAN PEMBAYARAN',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 16),
+
+        Text(
+          'Jumlah Invois: ${wang(jumlahInvois)}',
+        ),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'Jumlah Dibayar: ${wang(jumlahDibayar)}',
+        ),
+
+        const SizedBox(height: 8),
+
+        Text(
+          'Baki Tertunggak: ${wang(bakiBayaran)}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+
+        const SizedBox(height: 12),
+
+        Text(
+          'Status: $statusBayaran',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF17345C),
+          ),
+        ),
+      ],
+    ),
+  ),
+),
 
           const SizedBox(height: 24),
         
