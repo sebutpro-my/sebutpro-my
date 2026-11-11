@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'invois_page.dart';
 import 'jana_pdf_invois.dart';
 import 'rekod_bayaran_page.dart';
-import 'dart:convert';
+import 'sejarah_bayaran_page.dart';import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ButiranInvoisPage extends StatelessWidget {
@@ -361,6 +361,23 @@ ElevatedButton.icon(
         },
   icon: const Icon(Icons.payments_outlined),
   label: const Text('Rekod Bayaran'),
+),
+
+const SizedBox(height: 12),
+
+OutlinedButton.icon(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => SejarahBayaranPage(
+          invois: data,
+        ),
+      ),
+    );
+  },
+  icon: const Icon(Icons.history_outlined),
+  label: const Text('Sejarah Pembayaran'),
 ),
 
           const SizedBox(height: 24),
