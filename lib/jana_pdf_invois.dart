@@ -172,8 +172,8 @@ class JanaPdfInvois {
           ),
 
           pw.SizedBox(height: 18),
-
-          pw.Table.fromTextArray(
+    
+          pw.TableHelper.fromTextArray(
             headers: const [
               'Bil.',
               'Butiran Kerja',
