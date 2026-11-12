@@ -61,6 +61,170 @@ class _BqEditorPageState extends State<BqEditorPage> {
     });
   }
 
+Future<void> tambahItem(int idBahagian) async {
+  final butiran = TextEditingController();
+  final kuantiti = TextEditingController();
+  final kadar = TextEditingController();
+
+  String unitDipilih = 'm²';
+
+  final dataItem =
+      await showDialog<Map<String, dynamic>>(
+    context: context,
+    builder: (dialogContext) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Tambah Item Kerja'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: butiran,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: 'Butiran Kerja',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  DropdownButtonFormField<String>(
+                    initialValue: unitDipilih,
+                    decoration: const InputDecoration(
+                      labelText: 'Unit',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: const [
+                      'unit',
+                      'nos',
+                      'm',
+                      'm²',
+                      'm³',
+                      'kaki',
+                      'kaki²',
+                      'LS',
+                      'set',
+                      'kg',
+                    ].map((unit) {
+                      return DropdownMenuItem(
+                        value: unit,
+                        child: Text(unit),
+                      );
+                    }).toList(),
+                    onChanged: (nilai) {
+                      if (nilai != null) {
+                        setDialogState(() {
+                          unitDipilih = nilai;
+                        });
+                      }
+                    },
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  TextField(
+                    controller: kuantiti,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: const InputDecoration(
+                      labelText: 'Kuantiti',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  TextField(
+                    controller: kadar,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: const InputDecoration(
+                      labelText: 'Kadar (RM)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.pop(dialogContext),
+                child: const Text('Batal'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final qty = double.tryParse(
+                    kuantiti.text.trim(),
+                  );
+
+                  final rate = double.tryParse(
+                    kadar.text.trim(),
+                  );
+
+                  if (butiran.text.trim().isEmpty ||
+                      qty == null ||
+                      rate == null ||
+                      !qty.isFinite ||
+                      !rate.isFinite ||
+                      qty <= 0 ||
+                      rate < 0) {
+                    ScaffoldMessenger.of(context)
+                        .showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Sila lengkapkan butiran, '
+                          'kuantiti dan kadar yang sah.',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+
+                  Navigator.pop(
+                    dialogContext,
+                    {
+                      'butiran': butiran.text.trim(),
+                      'unit': unitDipilih,
+                      'kuantiti': qty,
+                      'kadar': rate,
+                      'jumlah': qty * rate,
+                    },
+                  );
+                },
+                child: const Text('Tambah'),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+
+  if (!mounted || dataItem == null) return;
+
+  setState(() {
+    final index = bahagian.indexWhere(
+      (item) => item['id'] == idBahagian,
+    );
+
+    if (index >= 0) {
+      final senaraiItem =
+          bahagian[index]['items']
+              as List<Map<String, dynamic>>;
+
+      senaraiItem.add(dataItem);
+    }
+  });
+}
+
   Future<void> padamBahagian(int id) async {
     final sah = await showDialog<bool>(
       context: context,
