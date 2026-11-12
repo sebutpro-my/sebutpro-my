@@ -627,29 +627,53 @@ for (int i = 0; i < bahagian.length; i++)
               'RM${(bahagian[i]['items'][j]['kadar'] as num).toStringAsFixed(2)}',
             ),
             
-trailing: Row(
-  mainAxisSize: MainAxisSize.min,
-  children: [
-    Text(
-      'RM${(bahagian[i]['items'][j]['jumlah'] as num).toStringAsFixed(2)}',
-      style: const TextStyle(
-        fontWeight: FontWeight.bold,
-        color: Color(0xFF17345C),
+trailing: SizedBox(
+  width: 145,
+  child: Column(
+    mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.end,
+    children: [
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        child: Text(
+          'RM${(bahagian[i]['items'][j]['jumlah'] as num).toStringAsFixed(2)}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF17345C),
+          ),
+        ),
       ),
-    ),
-    IconButton(
-      icon: const Icon(
-        Icons.delete_outline,
-        color: Colors.red,
+      Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          IconButton(
+            icon: const Icon(
+              Icons.edit_outlined,
+              color: Color(0xFF17345C),
+            ),
+            tooltip: 'Edit Item',
+            onPressed: () => editItem(
+              bahagian[i]['id'] as int,
+              j,
+            ),
+          ),
+          IconButton(
+            icon: const Icon(
+              Icons.delete_outline,
+              color: Colors.red,
+            ),
+            tooltip: 'Padam Item',
+            onPressed: () => padamItem(
+              bahagian[i]['id'] as int,
+              j,
+            ),
+          ),
+        ],
       ),
-      tooltip: 'Padam Item',
-      onPressed: () => padamItem(
-        bahagian[i]['id'] as int,
-        j,
-      ),
-    ),
-  ],
-),
+    ],
+  ),
+), 
 ),
 
         Padding(
