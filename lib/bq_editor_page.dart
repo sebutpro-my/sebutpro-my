@@ -225,6 +225,215 @@ Future<void> tambahItem(int idBahagian) async {
   });
 }
 
+Future<void> editItem(
+  int idBahagian,
+  int indexItem,
+) async {
+  final indexBahagian = bahagian.indexWhere(
+    (b) => b['id'] == idBahagian,
+  );
+
+  if (indexBahagian < 0) return;
+
+  final senaraiItem =
+      bahagian[indexBahagian]['items']
+          as List<Map<String, dynamic>>;
+
+  if (indexItem < 0 ||
+      indexItem >= senaraiItem.length) {
+    return;
+  }
+
+  final itemAsal = senaraiItem[indexItem];
+
+  final butiran = TextEditingController(
+    text: itemAsal['butiran'].toString(),
+  );
+
+  final kuantiti = TextEditingController(
+    text: itemAsal['kuantiti'].toString(),
+  );
+
+  final kadar = TextEditingController(
+    text: itemAsal['kadar'].toString(),
+  );
+
+  const units = [
+    'unit',
+    'nos',
+    'm',
+    'm²',
+    'm³',
+    'kaki',
+    'kaki²',
+    'LS',
+    'set',
+    'kg',
+  ];
+
+  String unitDipilih =
+      itemAsal['unit']?.toString() ?? 'm²';
+
+  if (!units.contains(unitDipilih)) {
+    unitDipilih = 'm²';
+  }
+
+  final dataBaharu =
+      await showDialog<Map<String, dynamic>>(
+    context: context,
+    builder: (dialogContext) {
+      return StatefulBuilder(
+        builder: (context, setDialogState) {
+          return AlertDialog(
+            title: const Text('Edit Item Kerja'),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: butiran,
+                    maxLines: 3,
+                    decoration: const InputDecoration(
+                      labelText: 'Butiran Kerja',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  DropdownButtonFormField<String>(
+                    initialValue: unitDipilih,
+                    decoration: const InputDecoration(
+                      labelText: 'Unit',
+                      border: OutlineInputBorder(),
+                    ),
+                    items: units.map((unit) {
+                      return DropdownMenuItem<String>(
+                        value: unit,
+                        child: Text(unit),
+                      );
+                    }).toList(),
+                    onChanged: (nilai) {
+                      if (nilai != null) {
+                        setDialogState(() {
+                          unitDipilih = nilai;
+                        });
+                      }
+                    },
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  TextField(
+                    controller: kuantiti,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: const InputDecoration(
+                      labelText: 'Kuantiti',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+
+                  const SizedBox(height: 12),
+
+                  TextField(
+                    controller: kadar,
+                    keyboardType:
+                        const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
+                    decoration: const InputDecoration(
+                      labelText: 'Kadar (RM)',
+                      border: OutlineInputBorder(),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () =>
+                    Navigator.pop(dialogContext),
+                child: const Text('Batal'),
+              ),
+
+              ElevatedButton(
+                onPressed: () {
+                  final qty = double.tryParse(
+                    kuantiti.text.trim(),
+                  );
+
+                  final rate = double.tryParse(
+                    kadar.text.trim(),
+                  );
+
+                  if (butiran.text.trim().isEmpty ||
+                      qty == null ||
+                      rate == null ||
+                      !qty.isFinite ||
+                      !rate.isFinite ||
+                      qty <= 0 ||
+                      rate < 0) {
+                    ScaffoldMessenger.of(
+                      dialogContext,
+                    ).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'Sila masukkan maklumat '
+                          'item yang sah.',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
+
+                  Navigator.pop(
+                    dialogContext,
+                    {
+                      'butiran': butiran.text.trim(),
+                      'unit': unitDipilih,
+                      'kuantiti': qty,
+                      'kadar': rate,
+                      'jumlah': qty * rate,
+                    },
+                  );
+                },
+                child: const Text(
+                  'Simpan Perubahan',
+                ),
+              ),
+            ],
+          );
+        },
+      );
+    },
+  );
+
+  butiran.dispose();
+  kuantiti.dispose();
+  kadar.dispose();
+
+  if (!mounted || dataBaharu == null) return;
+
+  setState(() {
+    final index = bahagian.indexWhere(
+      (b) => b['id'] == idBahagian,
+    );
+
+    if (index < 0) return;
+
+    final items = bahagian[index]['items']
+        as List<Map<String, dynamic>>;
+
+    if (indexItem >= 0 &&
+        indexItem < items.length) {
+      items[indexItem] = dataBaharu;
+    }
+  });
+}
+
 Future<void> padamItem(
   int idBahagian,
   int indexItem,
