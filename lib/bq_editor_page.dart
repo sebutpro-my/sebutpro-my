@@ -484,6 +484,49 @@ Future<void> padamItem(
   });
 }
 
+double jumlahBahagian(
+  Map<String, dynamic> dataBahagian,
+) {
+  final senaraiItem = dataBahagian['items'];
+
+  if (senaraiItem is! List) return 0;
+
+  double jumlah = 0;
+
+  for (final item in senaraiItem) {
+    if (item is! Map) continue;
+
+    final nilai = item['jumlah'];
+
+    if (nilai is num && nilai.isFinite) {
+      jumlah += nilai.toDouble();
+    }
+  }
+
+  return jumlah;
+}
+
+double jumlahKeseluruhanBQ() {
+  double jumlah = 0;
+
+  for (final dataBahagian in bahagian) {
+    jumlah += jumlahBahagian(dataBahagian);
+  }
+
+  return jumlah;
+}
+
+String formatWang(double nilai) {
+  final bahagianNombor = nilai.toStringAsFixed(2).split('.');
+
+  final depan = bahagianNombor[0].replaceAllMapped(
+    RegExp(r'\B(?=(\d{3})+(?!\d))'),
+    (padanan) => ',',
+  );
+
+  return 'RM $depan.${bahagianNombor[1]}';
+}
+
   Future<void> padamBahagian(int id) async {
     final sah = await showDialog<bool>(
       context: context,
