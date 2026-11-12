@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'bq_editor_page.dart';
 
 class BqTerperinciPage extends StatefulWidget {
   const BqTerperinciPage({super.key});
@@ -125,13 +126,31 @@ class _BqTerperinciPageState
 
           const SizedBox(height: 20),
 
-          const Text(
-            'Penyediaan BQ dan pengiraan item '
-            'akan dibina dalam modul seterusnya.',
-            style: TextStyle(
-              color: Colors.grey,
-            ),
-          ),
+          
+ElevatedButton.icon(
+  onPressed: () {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BqEditorPage(
+          format: formatDipilih,
+        ),
+      ),
+    );
+  },
+  icon: const Icon(Icons.edit_document),
+  label: const Text('Mula Sediakan BQ'),
+),
+
+const SizedBox(height: 12),
+
+const Text(
+  'Pilih format dan tekan Mula Sediakan BQ '
+  'untuk menambah bahagian kerja.',
+  textAlign: TextAlign.center,
+  style: TextStyle(color: Colors.grey),
+),
+
         ],
       ),
     );
