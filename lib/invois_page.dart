@@ -246,8 +246,62 @@ if (invoisAsal == null) {
     );
   }
 
-  // Kemas kini rekod yang sama.
-  senarai[indexAsal] = jsonEncode(data);
+final rekodTerkini = Map<String, dynamic>.from(
+  jsonDecode(senarai[indexAsal]) as Map,
+);
+
+final bayaranAsal = rekodTerkini['rekod_bayaran'];
+final senaraiBayaran =
+    bayaranAsal is List ? bayaranAsal : <dynamic>[];
+
+int jumlahDibayarSen = 0;
+
+for (final bayaran in senaraiBayaran) {
+  if (bayaran is Map) {
+    final nilai = bayaran['jumlah'];
+    final amaun = nilai is num
+        ? nilai.toDouble()
+        : double.tryParse(
+              nilai.toString().replaceAll(',', '').trim(),
+            ) ??
+            0;
+
+    if (!amaun.isFinite || amaun < 0) {
+      throw StateError(
+        'Rekod pembayaran tidak sah.',
+      );
+    }
+
+    jumlahDibayarSen += (amaun * 100).round();
+  }
+}
+
+final jumlahBaharuSen =
+    (jumlahKeseluruhan * 100).round();
+
+if (jumlahBaharuSen < jumlahDibayarSen) {
+  throw StateError(
+    'Jumlah invois tidak boleh kurang daripada '
+    'jumlah bayaran yang telah diterima.',
+  );
+}
+
+// Kekalkan rekod pembayaran dan maklumat asal.
+data['rekod_bayaran'] = senaraiBayaran;
+data['id'] = rekodTerkini['id'];
+data['tarikh'] = rekodTerkini['tarikh'];
+
+final bakiSen = jumlahBaharuSen - jumlahDibayarSen;
+
+data['status'] = jumlahDibayarSen <= 0
+    ? 'Belum Bayar'
+    : bakiSen > 0
+        ? 'Bayar Sebahagian'
+        : 'Selesai Bayar';
+
+// Kemas kini invois asal tanpa menghasilkan pendua.
+senarai[indexAsal] = jsonEncode(data);
+
 }
 
     final berjaya = await prefs.setStringList(
