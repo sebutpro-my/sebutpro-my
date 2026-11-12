@@ -225,6 +225,56 @@ Future<void> tambahItem(int idBahagian) async {
   });
 }
 
+Future<void> padamItem(
+  int idBahagian,
+  int indexItem,
+) async {
+  final sah = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Padam Item Kerja?'),
+      content: const Text(
+        'Adakah anda pasti mahu memadam '
+        'item kerja ini daripada BQ?',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () =>
+              Navigator.pop(dialogContext, false),
+          child: const Text('Batal'),
+        ),
+        TextButton(
+          onPressed: () =>
+              Navigator.pop(dialogContext, true),
+          child: const Text(
+            'Padam',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (!mounted || sah != true) return;
+
+  setState(() {
+    final indexBahagian = bahagian.indexWhere(
+      (item) => item['id'] == idBahagian,
+    );
+
+    if (indexBahagian < 0) return;
+
+    final senaraiItem =
+        bahagian[indexBahagian]['items']
+            as List<Map<String, dynamic>>;
+
+    if (indexItem >= 0 &&
+        indexItem < senaraiItem.length) {
+      senaraiItem.removeAt(indexItem);
+    }
+  });
+}
+
   Future<void> padamBahagian(int id) async {
     final sah = await showDialog<bool>(
       context: context,
@@ -367,14 +417,30 @@ for (int i = 0; i < bahagian.length; i++)
               '${bahagian[i]['items'][j]['unit']} × '
               'RM${(bahagian[i]['items'][j]['kadar'] as num).toStringAsFixed(2)}',
             ),
-            trailing: Text(
-              'RM${(bahagian[i]['items'][j]['jumlah'] as num).toStringAsFixed(2)}',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Color(0xFF17345C),
-              ),
-            ),
-          ),
+            
+trailing: Row(
+  mainAxisSize: MainAxisSize.min,
+  children: [
+    Text(
+      'RM${(bahagian[i]['items'][j]['jumlah'] as num).toStringAsFixed(2)}',
+      style: const TextStyle(
+        fontWeight: FontWeight.bold,
+        color: Color(0xFF17345C),
+      ),
+    ),
+    IconButton(
+      icon: const Icon(
+        Icons.delete_outline,
+        color: Colors.red,
+      ),
+      tooltip: 'Padam Item',
+      onPressed: () => padamItem(
+        bahagian[i]['id'] as int,
+        j,
+      ),
+    ),
+  ],
+),
 
         Padding(
           padding: const EdgeInsets.all(12),
