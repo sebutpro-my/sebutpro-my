@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'jana_pdf_resit.dart';
 
 class SejarahBayaranPage extends StatelessWidget {
   final Map<String, dynamic> invois;
@@ -208,7 +209,32 @@ class SejarahBayaranPage extends StatelessWidget {
                         'Catatan: ${rekod[i]['catatan']}',
                       ),
                     ],
-                  ],
+                  
+const SizedBox(height: 16),
+
+OutlinedButton.icon(
+  onPressed: () async {
+    try {
+      await JanaPdfResit.jana(
+        invois,
+        Map<String, dynamic>.from(rekod[i]),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Gagal menjana PDF Resit.',
+          ),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.receipt_long_outlined),
+  label: const Text('Jana Resit PDF'),
+),
+],
                 ),
               ),
             ),
