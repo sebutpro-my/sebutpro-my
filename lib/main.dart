@@ -6,6 +6,7 @@ import 'sebut_harga_page.dart';
 import 'senarai_sebut_harga_page.dart';
 import 'invois_page.dart';
 import 'senarai_invois_page.dart';
+import 'bq_terperinci_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -151,6 +152,14 @@ onTap: () {
     context,
     MaterialPageRoute(
       builder: (context) => const SenaraiSebutHargaPage(),
+    ),
+  );
+
+} else if (title == 'BQ Terperinci') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const BqTerperinciPage(),
     ),
   );
 
