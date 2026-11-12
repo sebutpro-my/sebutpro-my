@@ -325,31 +325,70 @@ Future<void> tambahItem(int idBahagian) async {
               ),
             ),
 
-          for (int i = 0; i < bahagian.length; i++)
-            Card(
-              margin: const EdgeInsets.only(bottom: 12),
-              child: ListTile(
-                title: Text(
-                  '${kodBahagian(i)} — '
-                  '${bahagian[i]['nama']}',
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                subtitle: const Text(
-                  '0 item kerja',
-                ),
-                trailing: IconButton(
-                  icon: const Icon(
-                    Icons.delete_outline,
-                    color: Colors.red,
-                  ),
-                  onPressed: () => padamBahagian(
-                    bahagian[i]['id'] as int,
-                  ),
-                ),
+          
+for (int i = 0; i < bahagian.length; i++)
+  Card(
+    margin: const EdgeInsets.only(bottom: 12),
+    child: Column(
+      children: [
+        ListTile(
+          title: Text(
+            '${kodBahagian(i)} — '
+            '${bahagian[i]['nama']}',
+            style: const TextStyle(
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          subtitle: Text(
+            '${(bahagian[i]['items'] as List).length} '
+            'item kerja',
+          ),
+          trailing: IconButton(
+            icon: const Icon(
+              Icons.delete_outline,
+              color: Colors.red,
+            ),
+            onPressed: () => padamBahagian(
+              bahagian[i]['id'] as int,
+            ),
+          ),
+        ),
+
+        for (int j = 0;
+            j < (bahagian[i]['items'] as List).length;
+            j++)
+          ListTile(
+            title: Text(
+              '${kodBahagian(i)}${j + 1} — '
+              '${bahagian[i]['items'][j]['butiran']}',
+            ),
+            subtitle: Text(
+              '${bahagian[i]['items'][j]['kuantiti']} '
+              '${bahagian[i]['items'][j]['unit']} × '
+              'RM${(bahagian[i]['items'][j]['kadar'] as num).toStringAsFixed(2)}',
+            ),
+            trailing: Text(
+              'RM${(bahagian[i]['items'][j]['jumlah'] as num).toStringAsFixed(2)}',
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF17345C),
               ),
             ),
+          ),
+
+        Padding(
+          padding: const EdgeInsets.all(12),
+          child: OutlinedButton.icon(
+            onPressed: () => tambahItem(
+              bahagian[i]['id'] as int,
+            ),
+            icon: const Icon(Icons.add),
+            label: const Text('Tambah Item'),
+          ),
+        ),
+      ],
+    ),
+  ),
 
           const SizedBox(height: 16),
 
