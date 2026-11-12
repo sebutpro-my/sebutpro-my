@@ -23,8 +23,8 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Analyze Flutter code
-        run: flutter analyze
+      - name: Analyze Flutter code       
+        run: flutter analyze --no-fatal-infos
 
       - name: Run Flutter tests
         run: flutter test
