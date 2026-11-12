@@ -441,6 +441,7 @@ trailing: Row(
     ),
   ],
 ),
+),
 
         Padding(
           padding: const EdgeInsets.all(12),
