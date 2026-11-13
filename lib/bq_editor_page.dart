@@ -729,6 +729,34 @@ trailing: SizedBox(
             label: const Text('Tambah Item'),
           ),
         ),
+      
+const Divider(),
+
+Padding(
+  padding: const EdgeInsets.all(12),
+  child: Row(
+    children: [
+      Expanded(
+        child: Text(
+          'JUMLAH BAHAGIAN ${kodBahagian(i)}',
+          style: const TextStyle(
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF17345C),
+          ),
+        ),
+      ),
+      const SizedBox(width: 8),
+      Text(
+        formatWang(jumlahBahagian(bahagian[i])),
+        style: const TextStyle(
+          fontWeight: FontWeight.bold,
+          color: Color(0xFF17345C),
+        ),
+      ),
+    ],
+  ),
+),
+
       ],
     ),
   ),
