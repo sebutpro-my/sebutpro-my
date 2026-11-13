@@ -17,6 +17,8 @@ class BqEditorPage extends StatefulWidget {
 class _BqEditorPageState extends State<BqEditorPage> {
   final namaBahagian = TextEditingController();
 
+  final tajukProjek = TextEditingController();
+
   final List<Map<String, dynamic>> bahagian = [];
 
   int nomborBahagian = 0;
@@ -563,6 +565,7 @@ String formatWang(double nilai) {
   @override
   void dispose() {
     namaBahagian.dispose();
+    tajukProjek.dispose();
     super.dispose();
   }
 
@@ -579,7 +582,19 @@ String formatWang(double nilai) {
       body: ListView(
         padding: const EdgeInsets.all(16),
         children: [
-          const Text(
+          
+TextField(
+  controller: tajukProjek,
+  maxLines: 2,
+  decoration: const InputDecoration(
+    labelText: 'Tajuk Projek',
+    hintText: 'Contoh: Kerja Menaik Taraf Surau',
+    border: OutlineInputBorder(),
+  ),
+),
+
+const SizedBox(height: 20),
+const Text(
             'BAHAGIAN KERJA',
             style: TextStyle(
               fontSize: 20,
