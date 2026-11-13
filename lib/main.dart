@@ -7,6 +7,7 @@ import 'senarai_sebut_harga_page.dart';
 import 'invois_page.dart';
 import 'senarai_invois_page.dart';
 import 'bq_terperinci_page.dart';
+import 'senarai_bq_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -77,6 +78,12 @@ class DashboardPage extends StatelessWidget {
             Icons.calculate_outlined,
             'BQ Terperinci',
             'BQ Komersial dan format JKR',
+          ),    
+          _menu(
+            context,
+            Icons.folder_open_outlined,
+            'Senarai BQ',
+            'Lihat BQ yang telah disimpan',
           ),
           _menu(
             context,
@@ -160,6 +167,14 @@ onTap: () {
     context,
     MaterialPageRoute(
       builder: (context) => const BqTerperinciPage(),
+    ),
+  );
+
+} else if (title == 'Senarai BQ') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SenaraiBqPage(),
     ),
   );
 
