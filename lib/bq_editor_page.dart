@@ -762,12 +762,68 @@ Padding(
   ),
 
           const SizedBox(height: 16),
-
-          const Text(
-            'Fungsi tambah item kerja dan simpan BQ '
-            'akan dibina pada langkah seterusnya.',
-            style: TextStyle(color: Colors.grey),
+        
+Card(
+  color: const Color(0xFFE8EDF7),
+  child: Padding(
+    padding: const EdgeInsets.all(16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        const Text(
+          'RINGKASAN BQ',
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: Color(0xFF17345C),
           ),
+        ),
+        const SizedBox(height: 12),
+        for (int i = 0; i < bahagian.length; i++)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    '${kodBahagian(i)} - ${bahagian[i]['nama']}',
+                  ),
+                ),
+                const SizedBox(width: 8),
+                Text(
+                  formatWang(jumlahBahagian(bahagian[i])),
+                ),
+              ],
+            ),
+          ),
+        const Divider(),
+        Row(
+          children: [
+            const Expanded(
+              child: Text(
+                'JUMLAH KESELURUHAN BQ',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Color(0xFF17345C),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            Text(
+              formatWang(jumlahKeseluruhanBQ()),
+              style: const TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
+                color: Color(0xFF17345C),
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  ),
+),
+
         ],
       ),
     );
