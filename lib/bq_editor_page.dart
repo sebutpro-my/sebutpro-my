@@ -1,5 +1,7 @@
 
 import 'package:flutter/material.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BqEditorPage extends StatefulWidget {
   final String format;
@@ -22,7 +24,8 @@ class _BqEditorPageState extends State<BqEditorPage> {
   final List<Map<String, dynamic>> bahagian = [];
 
   int nomborBahagian = 0;
-
+  String? idBqSemasa;
+  String? tarikhBqSemasa;
   String kodBahagian(int nombor) {
     var nilai = nombor;
     var kod = '';
@@ -562,6 +565,119 @@ String formatWang(double nilai) {
     });
   }
 
+Future<void> simpanBQ() async {
+  final tajuk = tajukProjek.text.trim();
+
+  if (tajuk.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Sila masukkan tajuk projek.'),
+      ),
+    );
+    return;
+  }
+
+  if (bahagian.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Sila tambah sekurang-kurangnya satu bahagian kerja.',
+        ),
+      ),
+    );
+    return;
+  }
+
+  final adaItem = bahagian.any((b) {
+    final items = b['items'];
+    return items is List && items.isNotEmpty;
+  });
+
+  if (!adaItem) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Sila tambah sekurang-kurangnya satu item kerja.',
+        ),
+      ),
+    );
+    return;
+  }
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+
+    final senarai = List<String>.from(
+      prefs.getStringList('senarai_bq') ?? [],
+    );
+
+    final sekarang = DateTime.now();
+    final id = idBqSemasa ??
+        sekarang.microsecondsSinceEpoch.toString();
+
+    final tarikh = tarikhBqSemasa ??
+        sekarang.toIso8601String();
+
+    final data = <String, dynamic>{
+      'id': id,
+      'tajuk': tajuk,
+      'format': widget.format,
+      'tarikh': tarikh,
+      'dikemaskini': sekarang.toIso8601String(),
+      'bahagian': jsonDecode(jsonEncode(bahagian)),
+      'jumlah': jumlahKeseluruhanBQ(),
+    };
+
+    final index = senarai.indexWhere((teks) {
+      try {
+        final rekod = jsonDecode(teks);
+        return rekod is Map &&
+            rekod['id']?.toString() == id;
+      } catch (_) {
+        return false;
+      }
+    });
+
+    if (index >= 0) {
+      senarai[index] = jsonEncode(data);
+    } else {
+      senarai.add(jsonEncode(data));
+    }
+
+    final berjaya = await prefs.setStringList(
+      'senarai_bq',
+      senarai,
+    );
+
+    if (!berjaya) {
+      throw StateError('Gagal menyimpan BQ.');
+    }
+
+    if (!mounted) return;
+
+    setState(() {
+      idBqSemasa = id;
+      tarikhBqSemasa = tarikh;
+    });
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('BQ berjaya disimpan.'),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Gagal menyimpan BQ. Sila cuba lagi.',
+        ),
+      ),
+    );
+  }
+}
+
   @override
   void dispose() {
     namaBahagian.dispose();
@@ -835,6 +951,22 @@ Card(
           ],
         ),
       ],
+    ),
+  ),
+),
+
+const SizedBox(height: 20),
+
+SizedBox(
+  width: double.infinity,
+  child: ElevatedButton.icon(
+    onPressed: simpanBQ,
+    icon: const Icon(Icons.save_outlined),
+    label: const Text('Simpan BQ'),
+    style: ElevatedButton.styleFrom(
+      padding: const EdgeInsets.symmetric(
+        vertical: 16,
+      ),
     ),
   ),
 ),
