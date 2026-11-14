@@ -120,6 +120,104 @@ class _SenaraiBqPageState extends State<SenaraiBqPage> {
     }
   }
 
+Future<void> padamBQ(Map<String, dynamic> rekod) async {
+  final id = rekod['id']?.toString();
+
+  if (id == null || id.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('ID BQ tidak sah.'),
+      ),
+    );
+    return;
+  }
+
+  final sah = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Padam BQ?'),
+      content: Text(
+        'Adakah anda pasti mahu memadam BQ '
+        '"${rekod['tajuk'] ?? 'Tanpa Tajuk'}"? '
+        'Tindakan ini tidak boleh dibatalkan.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, false);
+          },
+          child: const Text('Batal'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, true);
+          },
+          child: const Text(
+            'Padam',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (!mounted || sah != true) return;
+
+  try {
+    final prefs = await SharedPreferences.getInstance();
+
+    final data = List<String>.from(
+      prefs.getStringList('senarai_bq') ?? [],
+    );
+
+    final jumlahAsal = data.length;
+
+    data.removeWhere((teks) {
+      try {
+        final item = jsonDecode(teks);
+
+        return item is Map &&
+            item['id']?.toString() == id;
+      } catch (_) {
+        return false;
+      }
+    });
+
+    if (data.length == jumlahAsal) {
+      throw StateError('Rekod BQ tidak ditemui.');
+    }
+
+    final berjaya = await prefs.setStringList(
+      'senarai_bq',
+      data,
+    );
+
+    if (!berjaya) {
+      throw StateError('Gagal menyimpan perubahan.');
+    }
+
+    if (!mounted) return;
+
+    await muatBQ();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('BQ berjaya dipadam.'),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('Gagal memadam BQ.'),
+      ),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,6 +325,21 @@ OutlinedButton.icon(
   icon: const Icon(Icons.edit_outlined),
   label: const Text('Buka / Edit BQ'),
 ),
+
+const SizedBox(height: 8),
+
+OutlinedButton.icon(
+  onPressed: () => padamBQ(rekod),
+  icon: const Icon(
+    Icons.delete_outline,
+    color: Colors.red,
+  ),
+  label: const Text(
+    'Padam BQ',
+    style: TextStyle(color: Colors.red),
+  ),
+),
+                                
 ],
                             ),
                           ),
