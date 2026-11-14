@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'bq_editor_page.dart';
 
 class SenaraiBqPage extends StatefulWidget {
   const SenaraiBqPage({super.key});
@@ -203,7 +204,30 @@ class _SenaraiBqPageState extends State<SenaraiBqPage> {
                                     color: Color(0xFF17345C),
                                   ),
                                 ),
-                              ],
+                              
+const SizedBox(height: 12),
+
+OutlinedButton.icon(
+  onPressed: () async {
+    final format = rekod['format']?.toString() ?? '';
+
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => BqEditorPage(
+          format: format,
+          bqAsal: Map<String, dynamic>.from(rekod),
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+    await muatBQ();
+  },
+  icon: const Icon(Icons.edit_outlined),
+  label: const Text('Buka / Edit BQ'),
+),
+],
                             ),
                           ),
                         );
