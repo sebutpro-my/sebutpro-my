@@ -5,10 +5,12 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class BqEditorPage extends StatefulWidget {
   final String format;
+  final Map<String, dynamic>? bqAsal;
 
   const BqEditorPage({
     super.key,
     required this.format,
+    this.bqAsal,
   });
 
   @override
@@ -26,7 +28,54 @@ class _BqEditorPageState extends State<BqEditorPage> {
   int nomborBahagian = 0;
   String? idBqSemasa;
   String? tarikhBqSemasa;
-  String kodBahagian(int nombor) {
+  
+@override
+void initState() {
+  super.initState();
+
+  final asal = widget.bqAsal;
+  if (asal == null) return;
+
+  idBqSemasa = asal['id']?.toString();
+  tarikhBqSemasa = asal['tarikh']?.toString();
+
+  tajukProjek.text = asal['tajuk']?.toString() ?? '';
+
+  final dataBahagian = asal['bahagian'];
+
+  if (dataBahagian is List) {
+    for (final data in dataBahagian) {
+      if (data is! Map) continue;
+
+      final bahagianAsal =
+          Map<String, dynamic>.from(data);
+
+      final itemAsal = bahagianAsal['items'];
+      final items = <Map<String, dynamic>>[];
+
+      if (itemAsal is List) {
+        for (final item in itemAsal) {
+          if (item is Map) {
+            items.add(Map<String, dynamic>.from(item));
+          }
+        }
+      }
+
+      final id = bahagianAsal['id'];
+
+      if (id is int && id > nomborBahagian) {
+        nomborBahagian = id;
+      }
+
+      bahagian.add({
+        ...bahagianAsal,
+        'items': items,
+      });
+    }
+  }
+}
+  
+String kodBahagian(int nombor) {
     var nilai = nombor;
     var kod = '';
 
