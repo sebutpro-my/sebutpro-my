@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'senarai_bq_page.dart';
 
 class BqEditorPage extends StatefulWidget {
   final String format;
@@ -714,7 +715,18 @@ Future<void> simpanBQ() async {
         content: Text('BQ berjaya disimpan.'),
       ),
     );
-  } catch (e) {
+  
+if (widget.bqAsal != null) {
+  Navigator.pop(context, true);
+} else {
+  Navigator.pushReplacement(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const SenaraiBqPage(),
+    ),
+  );
+}
+} catch (e) {
     if (!mounted) return;
 
     ScaffoldMessenger.of(context).showSnackBar(
