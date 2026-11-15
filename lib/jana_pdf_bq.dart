@@ -364,42 +364,61 @@ kandungan.add(
         pw.SizedBox(height: 8),
       );
 
-      kandungan.add(
-        pw.Table.fromTextArray(
-          headers: const [
+kandungan.add(
+  pw.Table.fromTextArray(
+    headers: gayaJkr
+        ? [
             'Bil.',
             'Butiran Kerja',
             'Unit',
             'Kuantiti',
             'Kadar (RM)',
             'Jumlah (RM)',
+          ]
+        : [
+            'No.',
+            'Kerja / Perkhidmatan',
+            'Unit',
+            'Kuantiti',
+            'Harga Unit (RM)',
+            'Jumlah (RM)',
           ],
-          data: baris,
-          headerStyle: pw.TextStyle(
-            fontSize: 8,
-            fontWeight: pw.FontWeight.bold,
-          ),
-          cellStyle: const pw.TextStyle(
-            fontSize: 8,
-          ),
-          headerDecoration: const pw.BoxDecoration(
-            color: PdfColors.grey300,
-          ),
-          border: pw.TableBorder.all(
-            color: PdfColors.grey600,
-            width: 0.5,
-          ),
-          cellPadding: const pw.EdgeInsets.all(5),
-          columnWidths: {
-            0: const pw.FlexColumnWidth(0.7),
-            1: const pw.FlexColumnWidth(3.5),
-            2: const pw.FlexColumnWidth(0.8),
-            3: const pw.FlexColumnWidth(0.9),
-            4: const pw.FlexColumnWidth(1.3),
-            5: const pw.FlexColumnWidth(1.4),
-          },
-        ),
-      );
+    data: baris,
+    headerStyle: pw.TextStyle(
+      fontSize: gayaJkr ? 8 : 9,
+      fontWeight: pw.FontWeight.bold,
+      color: gayaJkr
+          ? PdfColors.black
+          : PdfColors.white,
+    ),
+    cellStyle: pw.TextStyle(
+      fontSize: gayaJkr ? 8 : 9,
+    ),
+    headerDecoration: pw.BoxDecoration(
+      color: gayaJkr
+          ? PdfColors.grey300
+          : PdfColors.blueGrey800,
+    ),
+    border: pw.TableBorder.all(
+      color: gayaJkr
+          ? PdfColors.grey600
+          : PdfColors.blueGrey200,
+      width: gayaJkr ? 0.5 : 0.3,
+    ),
+    cellPadding: pw.EdgeInsets.symmetric(
+      horizontal: gayaJkr ? 5 : 7,
+      vertical: gayaJkr ? 5 : 8,
+    ),
+    columnWidths: {
+      0: const pw.FlexColumnWidth(0.7),
+      1: pw.FlexColumnWidth(gayaJkr ? 4.0 : 3.5),
+      2: const pw.FlexColumnWidth(0.8),
+      3: const pw.FlexColumnWidth(1.0),
+      4: const pw.FlexColumnWidth(1.4),
+      5: const pw.FlexColumnWidth(1.5),
+    },
+  ),
+);
 
       kandungan.add(
         pw.SizedBox(height: 7),
