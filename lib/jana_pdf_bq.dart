@@ -4,6 +4,8 @@ import 'dart:typed_data';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'dart:convert';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class JanaPdfBq {
   static double nombor(dynamic nilai) {
@@ -56,6 +58,38 @@ class JanaPdfBq {
   ) async {
     final pdf = pw.Document();
 
+final prefs = await SharedPreferences.getInstance();
+final teksProfil = prefs.getString('profil_syarikat');
+final Map<String, dynamic> profil = {};
+
+if (teksProfil != null) {
+  try {
+    final hasil = jsonDecode(teksProfil);
+    if (hasil is Map) {
+      profil.addAll(Map<String, dynamic>.from(hasil));
+    }
+  } catch (_) {}
+}
+
+String baca(String kunci) {
+  return profil[kunci]?.toString().trim() ?? '';
+}
+
+Uint8List? bacaLogo() {
+  final teks = baca('logo_syarikat');
+
+  if (teks.isEmpty) return null;
+
+  try {
+    final bytes = base64Decode(teks);
+    return bytes.isEmpty ? null : bytes;
+  } catch (_) {
+    return null;
+  }
+}
+
+final logo = bacaLogo();
+
     final format = rekod['format']
             ?.toString()
             .toLowerCase() ??
@@ -83,6 +117,63 @@ class JanaPdfBq {
     }
 
     final kandungan = <pw.Widget>[];
+
+kandungan.add(
+  pw.Row(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Expanded(
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text(
+              baca('nama').isEmpty
+                  ? 'NAMA SYARIKAT'
+                  : baca('nama'),
+              style: pw.TextStyle(
+                fontSize: 15,
+                fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blueGrey900,
+              ),
+            ),
+            if (baca('ssm').isNotEmpty)
+              pw.Text('No. SSM: ${baca('ssm')}'),
+            if (baca('alamat').isNotEmpty)
+              pw.Text(baca('alamat')),
+            if (baca('telefon').isNotEmpty)
+              pw.Text('Tel: ${baca('telefon')}'),
+            if (baca('emel').isNotEmpty)
+              pw.Text('E-mel: ${baca('emel')}'),
+          ],
+        ),
+      ),
+      if (logo != null)
+        pw.SizedBox(
+          width: 85,
+          height: 65,
+          child: pw.Image(
+            pw.MemoryImage(logo),
+            fit: pw.BoxFit.contain,
+          ),
+        ),
+    ],
+  ),
+);
+
+kandungan.add(
+  pw.SizedBox(height: 12),
+);
+
+kandungan.add(
+  pw.Divider(
+    color: PdfColors.grey600,
+    thickness: 0.8,
+  ),
+);
+
+kandungan.add(
+  pw.SizedBox(height: 16),
+);
 
     double jumlahKeseluruhan = 0;
 
