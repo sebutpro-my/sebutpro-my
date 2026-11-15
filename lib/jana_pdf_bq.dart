@@ -226,6 +226,84 @@ kandungan.add(
       pw.SizedBox(height: 18),
     );
 
+if (gayaJkr) {
+  kandungan.add(
+    pw.Container(
+      width: double.infinity,
+      padding: const pw.EdgeInsets.all(12),
+      decoration: pw.BoxDecoration(
+        color: PdfColors.grey200,
+        border: pw.Border.all(
+          color: PdfColors.grey600,
+          width: 0.7,
+        ),
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'DOKUMEN SENARAI KUANTITI KERJA',
+            style: pw.TextStyle(
+              fontSize: 10,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+          pw.SizedBox(height: 6),
+          pw.Text(
+            'Format: BQ Gaya JKR',
+            style: const pw.TextStyle(
+              fontSize: 9,
+            ),
+          ),
+          pw.SizedBox(height: 4),
+          pw.Text(
+            'Susunan kerja mengikut bahagian '
+            'dan nombor item.',
+            style: const pw.TextStyle(
+              fontSize: 9,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+} else {
+  kandungan.add(
+    pw.Container(
+      width: double.infinity,
+      padding: const pw.EdgeInsets.all(12),
+      decoration: const pw.BoxDecoration(
+        color: PdfColors.blueGrey50,
+      ),
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            'RINGKASAN KERJA',
+            style: pw.TextStyle(
+              fontSize: 11,
+              fontWeight: pw.FontWeight.bold,
+              color: PdfColors.blueGrey900,
+            ),
+          ),
+          pw.SizedBox(height: 6),
+          pw.Text(
+            'Senarai kerja, kuantiti, kadar '
+            'dan harga mengikut bahagian.',
+            style: const pw.TextStyle(
+              fontSize: 9,
+            ),
+          ),
+        ],
+      ),
+    ),
+  );
+}
+
+kandungan.add(
+  pw.SizedBox(height: 18),
+);
+
     for (int i = 0; i < bahagian.length; i++) {
       final data = bahagian[i];
       final kod = kodBahagian(i);
