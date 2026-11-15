@@ -241,8 +241,9 @@ kandungan.add(
         ),
 );
 
-    kandungan.add(
-      pw.SizedBox(height: 18),
+    kandungan.add(    
+      pw.SizedBox(height: gayaJkr ? 10 : 18),
+
     );
 
 if (gayaJkr) {
