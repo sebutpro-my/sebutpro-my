@@ -304,6 +304,8 @@ kandungan.add(
   pw.SizedBox(height: 18),
 );
 
+final ringkasanHarga = <List<String>>[];
+
     for (int i = 0; i < bahagian.length; i++) {
       final data = bahagian[i];
       final kod = kodBahagian(i);
@@ -349,6 +351,12 @@ kandungan.add(
       }
 
       jumlahKeseluruhan += jumlahBahagian;
+
+ringkasanHarga.add([
+  kod,
+  nama,
+  wang(jumlahBahagian),
+]);
 
       kandungan.add(
         pw.Text(
@@ -442,6 +450,66 @@ kandungan.add(
         pw.SizedBox(height: 22),
       );
     }
+
+if (gayaJkr && ringkasanHarga.isNotEmpty) {
+  kandungan.add(
+    pw.SizedBox(height: 12),
+  );
+
+  kandungan.add(
+    pw.Center(
+      child: pw.Text(
+        'RINGKASAN HARGA',
+        style: pw.TextStyle(
+          fontSize: 13,
+          fontWeight: pw.FontWeight.bold,
+        ),
+      ),
+    ),
+  );
+
+  kandungan.add(
+    pw.SizedBox(height: 12),
+  );
+
+  kandungan.add(
+    pw.Table.fromTextArray(
+      headers: [
+        'Bahagian',
+        'Butiran Kerja',
+        'Jumlah (RM)',
+      ],
+      data: ringkasanHarga,
+      headerStyle: pw.TextStyle(
+        fontSize: 9,
+        fontWeight: pw.FontWeight.bold,
+      ),
+      cellStyle: const pw.TextStyle(
+        fontSize: 9,
+      ),
+      headerDecoration: const pw.BoxDecoration(
+        color: PdfColors.grey300,
+      ),
+      border: pw.TableBorder.all(
+        color: PdfColors.grey600,
+        width: 0.5,
+      ),
+      cellPadding: const pw.EdgeInsets.all(7),
+      columnWidths: {
+        0: const pw.FlexColumnWidth(1),
+        1: const pw.FlexColumnWidth(4),
+        2: const pw.FlexColumnWidth(2),
+      },
+      cellAlignments: {
+        2: pw.Alignment.centerRight,
+      },
+    ),
+  );
+
+  kandungan.add(
+    pw.SizedBox(height: 14),
+  );
+}
 
     kandungan.add(
       pw.Divider(thickness: 1),
