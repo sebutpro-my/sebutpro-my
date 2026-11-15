@@ -537,7 +537,7 @@ if (gayaJkr && ringkasanHarga.isNotEmpty) {
         footer: (context) => pw.Align(
           alignment: pw.Alignment.centerRight,
           child: pw.Text(
-            'Muka Surat ${context.pageNumber}',
+          'Muka Surat ${context.pageNumber} daripada ${context.pagesCount}',
             style: const pw.TextStyle(
               fontSize: 8,
               color: PdfColors.grey700,
