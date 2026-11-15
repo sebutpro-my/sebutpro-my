@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'bq_editor_page.dart';
+import 'jana_pdf_bq.dart';
 
 class SenaraiBqPage extends StatefulWidget {
   const SenaraiBqPage({super.key});
@@ -324,6 +325,30 @@ OutlinedButton.icon(
   },
   icon: const Icon(Icons.edit_outlined),
   label: const Text('Buka / Edit BQ'),
+),
+
+const SizedBox(height: 8),
+
+OutlinedButton.icon(
+  onPressed: () async {
+    try {
+      await JanaPdfBq.jana(
+        Map<String, dynamic>.from(rekod),
+      );
+    } catch (e) {
+      if (!context.mounted) return;
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Gagal menjana PDF BQ. Sila cuba lagi.',
+          ),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.picture_as_pdf_outlined),
+  label: const Text('Jana PDF BQ'),
 ),
 
 const SizedBox(height: 8),
