@@ -220,17 +220,26 @@ kandungan.add(
       pw.SizedBox(height: 12),
     );
 
-    kandungan.add(
-      pw.Text(
-        gayaJkr
-            ? 'FORMAT BQ GAYA JKR'
-            : 'FORMAT BQ KOMERSIAL',
-        style: const pw.TextStyle(
-          fontSize: 9,
-          color: PdfColors.grey700,
+kandungan.add(
+  gayaJkr
+      ? pw.Center(
+          child: pw.Text(
+            'FORMAT BQ GAYA JKR',
+            textAlign: pw.TextAlign.center,
+            style: const pw.TextStyle(
+              fontSize: 9,
+              color: PdfColors.grey700,
+            ),
+          ),
+        )
+      : pw.Text(
+          'FORMAT BQ KOMERSIAL',
+          style: const pw.TextStyle(
+            fontSize: 9,
+            color: PdfColors.grey700,
+          ),
         ),
-      ),
-    );
+);
 
     kandungan.add(
       pw.SizedBox(height: 18),
