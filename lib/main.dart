@@ -8,6 +8,7 @@ import 'invois_page.dart';
 import 'senarai_invois_page.dart';
 import 'bq_terperinci_page.dart';
 import 'senarai_bq_page.dart';
+import 'pelanggan_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -209,8 +210,16 @@ onTap: () {
       builder: (context) => const SenaraiInvoisPage(),
     ),
   );
-} else {
 
+} else if (title == 'Pelanggan') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const PelangganPage(),
+    ),
+  );
+    
+} else {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
       content: Text('$title - Akan dibangunkan'),
