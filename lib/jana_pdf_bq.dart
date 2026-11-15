@@ -328,6 +328,12 @@ ringkasanHarga.add([
   wang(jumlahBahagian),
 ]);
 
+if (gayaJkr) {
+  kandungan.add(
+    pw.NewPage(freeSpace: 140),
+  );
+}
+
       kandungan.add(
         pw.Text(
           '$kod - $nama',
