@@ -194,17 +194,27 @@ kandungan.add(
     kandungan.add(
       pw.SizedBox(height: 14),
     );
-
-    kandungan.add(
-      pw.Text(
-        tajuk.isEmpty ? 'TANPA TAJUK' : tajuk,
-        textAlign: pw.TextAlign.center,
-        style: pw.TextStyle(
-          fontSize: 12,
-          fontWeight: pw.FontWeight.bold,
+ 
+kandungan.add(
+  gayaJkr
+      ? pw.Center(
+          child: pw.Text(
+            tajuk.isEmpty ? 'TANPA TAJUK' : tajuk,
+            textAlign: pw.TextAlign.center,
+            style: pw.TextStyle(
+              fontSize: 12,
+              fontWeight: pw.FontWeight.bold,
+            ),
+          ),
+        )
+      : pw.Text(
+          tajuk.isEmpty ? 'TANPA TAJUK' : tajuk,
+          style: pw.TextStyle(
+            fontSize: 12,
+            fontWeight: pw.FontWeight.bold,
+          ),
         ),
-      ),
-    );
+);
 
     kandungan.add(
       pw.SizedBox(height: 12),
@@ -227,46 +237,6 @@ kandungan.add(
     );
 
 if (gayaJkr) {
-  kandungan.add(
-    pw.Container(
-      width: double.infinity,
-      padding: const pw.EdgeInsets.all(12),
-      decoration: pw.BoxDecoration(
-        color: PdfColors.grey200,
-        border: pw.Border.all(
-          color: PdfColors.grey600,
-          width: 0.7,
-        ),
-      ),
-      child: pw.Column(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            'DOKUMEN SENARAI KUANTITI KERJA',
-            style: pw.TextStyle(
-              fontSize: 10,
-              fontWeight: pw.FontWeight.bold,
-            ),
-          ),
-          pw.SizedBox(height: 6),
-          pw.Text(
-            'Format: BQ Gaya JKR',
-            style: const pw.TextStyle(
-              fontSize: 9,
-            ),
-          ),
-          pw.SizedBox(height: 4),
-          pw.Text(
-            'Susunan kerja mengikut bahagian '
-            'dan nombor item.',
-            style: const pw.TextStyle(
-              fontSize: 9,
-            ),
-          ),
-        ],
-      ),
-    ),
-  );
 } else {
   kandungan.add(
     pw.Container(
