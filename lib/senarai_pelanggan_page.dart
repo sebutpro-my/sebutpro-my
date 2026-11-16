@@ -91,6 +91,115 @@ class _SenaraiPelangganPageState
     super.dispose();
   }
 
+Future<void> padamPelanggan(
+  Map<String, dynamic> pelanggan,
+) async {
+  final id = pelanggan['id']?.toString() ?? '';
+  final nama = pelanggan['nama']?.toString() ?? '';
+
+  if (id.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text('ID pelanggan tidak sah.'),
+      ),
+    );
+    return;
+  }
+
+  final sah = await showDialog<bool>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Padam Pelanggan?'),
+      content: Text(
+        'Adakah anda pasti mahu memadam '
+        'rekod $nama?\n\n'
+        'Tindakan ini tidak boleh dibatalkan.',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, false);
+          },
+          child: const Text('Batal'),
+        ),
+        TextButton(
+          onPressed: () {
+            Navigator.pop(dialogContext, true);
+          },
+          child: const Text(
+            'Padam',
+            style: TextStyle(color: Colors.red),
+          ),
+        ),
+      ],
+    ),
+  );
+
+  if (sah != true || !mounted) return;
+
+  try {
+    final prefs =
+        await SharedPreferences.getInstance();
+
+    final rekod = List<String>.from(
+      prefs.getStringList('senarai_pelanggan') ??
+          [],
+    );
+
+    final indeks = rekod.indexWhere((teks) {
+      try {
+        final data = jsonDecode(teks);
+
+        return data is Map &&
+            data['id']?.toString() == id;
+      } catch (_) {
+        return false;
+      }
+    });
+
+    if (indeks < 0) {
+      throw StateError(
+        'Rekod pelanggan tidak ditemui.',
+      );
+    }
+
+    rekod.removeAt(indeks);
+
+    final berjaya = await prefs.setStringList(
+      'senarai_pelanggan',
+      rekod,
+    );
+
+    if (!berjaya) {
+      throw StateError('Gagal menyimpan perubahan.');
+    }
+
+    if (!mounted) return;
+
+    await muatPelanggan();
+
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Pelanggan berjaya dipadam.',
+        ),
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Gagal memadam pelanggan. Sila cuba lagi.',
+        ),
+      ),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     final kataCari = carian.text.trim().toLowerCase();
@@ -307,6 +416,23 @@ Align(
     },
     icon: const Icon(Icons.edit_outlined),
     label: const Text('Edit Pelanggan'),
+  ),
+),
+
+const SizedBox(height: 8),
+
+Align(
+  alignment: Alignment.centerRight,
+  child: OutlinedButton.icon(
+    onPressed: () => padamPelanggan(pelanggan),
+    icon: const Icon(
+      Icons.delete_outline,
+      color: Colors.red,
+    ),
+    label: const Text(
+      'Padam Pelanggan',
+      style: TextStyle(color: Colors.red),
+    ),
   ),
 ),
   ],
