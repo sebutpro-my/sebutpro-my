@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:typed_data';
 import 'signature_pad_page.dart';
+import 'pilih_pelanggan_page.dart';
 
 class SebutHargaPage extends StatefulWidget {
   final Map<String, dynamic>? rekodEdit;
@@ -530,10 +531,35 @@ Future<void> bukaTandatangan({
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 16),
-          medan('Nama Pelanggan', pelanggan),
-          const SizedBox(height: 12),
-          medan('Tajuk Projek / Kerja', tajuk),
+          
+const SizedBox(height: 16),
+medan('Nama Pelanggan', pelanggan),
+const SizedBox(height: 8),
+
+OutlinedButton.icon(
+  onPressed: () async {
+    final dipilih =
+        await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const PilihPelangganPage(),
+      ),
+    );
+
+    if (!mounted || dipilih == null) return;
+
+    setState(() {
+      pelanggan.text =
+          dipilih['nama']?.toString() ?? '';
+    });
+  },
+  icon: const Icon(Icons.contact_page_outlined),
+  label: const Text('Pilih Pelanggan Tersimpan'),
+),
+
+const SizedBox(height: 12),
+medan('Tajuk Projek / Kerja', tajuk),
           const SizedBox(height: 12),
           TextField(
             controller: rujukan,
