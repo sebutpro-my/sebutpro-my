@@ -46,7 +46,8 @@ class _ItemKerja {
 }
 
 class _SebutHargaPageState extends State<SebutHargaPage> {
-  final pelanggan = TextEditingController();
+  final pelanggan = TextEditingController();  
+  Map<String, dynamic>? maklumatPelanggan;
   final tajuk = TextEditingController();
   final rujukan = TextEditingController();
   String modRujukan = 'manual';
@@ -74,7 +75,14 @@ Uint8List? tandatanganPelanggan;
     if (data == null) return;
 
     pelanggan.text = data['pelanggan']?.toString() ?? '';
-    tajuk.text = data['tajuk']?.toString() ?? '';
+   
+final maklumatAsal = data['maklumat_pelanggan'];
+
+if (maklumatAsal is Map) {
+  maklumatPelanggan =
+      Map<String, dynamic>.from(maklumatAsal);
+}
+ tajuk.text = data['tajuk']?.toString() ?? '';
     rujukan.text = data['rujukan']?.toString() ?? '';
     
 final gambarKontraktor =
@@ -191,11 +199,23 @@ if (teksTempoh.isNotEmpty &&
     'Tempoh sah mesti antara 1 hingga 365 hari',
   );
 }
+   
 final data = {
-    'pelanggan': pelanggan.text,
-    'tajuk': tajuk.text,
-    'rujukan': rujukan.text.trim(),
-    
+  'pelanggan': pelanggan.text,
+  'maklumat_pelanggan':
+      maklumatPelanggan != null &&
+              pelanggan.text.trim() ==
+                  (maklumatPelanggan!['nama']
+                          ?.toString()
+                          .trim() ??
+                      '')
+          ? Map<String, dynamic>.from(
+              maklumatPelanggan!,
+            )
+          : null,
+  'tajuk': tajuk.text,
+  'rujukan': rujukan.text.trim(),
+
 'tandatangan_kontraktor': tandatanganKontraktor == null
     ? null
     : base64Encode(tandatanganKontraktor!),
@@ -548,11 +568,15 @@ OutlinedButton.icon(
     );
 
     if (!mounted || dipilih == null) return;
+ 
+setState(() {
+  maklumatPelanggan =
+      Map<String, dynamic>.from(dipilih);
 
-    setState(() {
-      pelanggan.text =
-          dipilih['nama']?.toString() ?? '';
-    });
+  pelanggan.text =
+      dipilih['nama']?.toString() ?? '';
+});
+
   },
   icon: const Icon(Icons.contact_page_outlined),
   label: const Text('Pilih Pelanggan Tersimpan'),
