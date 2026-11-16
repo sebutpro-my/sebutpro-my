@@ -8,7 +8,6 @@ import 'invois_page.dart';
 import 'senarai_invois_page.dart';
 import 'bq_terperinci_page.dart';
 import 'senarai_bq_page.dart';
-import 'pelanggan_page.dart';
 import 'senarai_pelanggan_page.dart';
 
 void main() {
