@@ -280,7 +280,36 @@ actions: [
                                     'Alamat: ${baca(pelanggan, 'alamat')}',
                                   ),
                                 ],
-                              ],
+                            
+const SizedBox(height: 12),
+
+const Divider(),
+
+Align(
+  alignment: Alignment.centerRight,
+  child: OutlinedButton.icon(
+    onPressed: () async {
+      final berjaya = await Navigator.push<bool>(
+        context,
+        MaterialPageRoute(
+          builder: (context) => PelangganPage(
+            pelangganAsal:
+                Map<String, dynamic>.from(pelanggan),
+          ),
+        ),
+      );
+
+      if (!mounted) return;
+
+      if (berjaya == true) {
+        await muatPelanggan();
+      }
+    },
+    icon: const Icon(Icons.edit_outlined),
+    label: const Text('Edit Pelanggan'),
+  ),
+),
+  ],
                             ),
                           ),
                         ),
