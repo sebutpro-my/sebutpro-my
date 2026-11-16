@@ -3,6 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'pelanggan_page.dart';
 
 class SenaraiPelangganPage extends StatefulWidget {
   const SenaraiPelangganPage({super.key});
@@ -110,15 +111,38 @@ class _SenaraiPelangganPageState
     return Scaffold(
       appBar: AppBar(
         title: const Text('Senarai Pelanggan'),
-        actions: [
-          IconButton(
-            onPressed: sedangMuat
-                ? null
-                : muatPelanggan,
-            icon: const Icon(Icons.refresh),
-            tooltip: 'Muat Semula',
-          ),
-        ],
+        
+actions: [
+  IconButton(
+    onPressed: sedangMuat
+        ? null
+        : () async {
+            final berjaya = await Navigator.push<bool>(
+              context,
+              MaterialPageRoute(
+                builder: (context) =>
+                    const PelangganPage(),
+              ),
+            );
+
+            if (!mounted) return;
+
+            if (berjaya == true) {
+              await muatPelanggan();
+            }
+          },
+    icon: const Icon(Icons.person_add_alt_1),
+    tooltip: 'Daftar Pelanggan',
+  ),
+  IconButton(
+    onPressed: sedangMuat
+        ? null
+        : muatPelanggan,
+    icon: const Icon(Icons.refresh),
+    tooltip: 'Muat Semula',
+  ),
+],
+
       ),
       body: sedangMuat
           ? const Center(
