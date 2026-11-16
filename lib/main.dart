@@ -9,6 +9,7 @@ import 'senarai_invois_page.dart';
 import 'bq_terperinci_page.dart';
 import 'senarai_bq_page.dart';
 import 'pelanggan_page.dart';
+import 'senarai_pelanggan_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -215,10 +216,10 @@ onTap: () {
   Navigator.push(
     context,
     MaterialPageRoute(
-      builder: (context) => const PelangganPage(),
+      builder: (context) => const SenaraiPelangganPage(),
     ),
   );
-    
+ 
 } else {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
