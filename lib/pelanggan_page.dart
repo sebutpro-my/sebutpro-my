@@ -1,13 +1,18 @@
 
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PelangganPage extends StatefulWidget {
-  const PelangganPage({super.key});
+  final Map<String, dynamic>? pelangganAsal;
+
+  const PelangganPage({
+    super.key,
+    this.pelangganAsal,
+  });
 
   @override
+
   State<PelangganPage> createState() => _PelangganPageState();
 }
 
@@ -19,6 +24,21 @@ class _PelangganPageState extends State<PelangganPage> {
   final alamat = TextEditingController();
 
   bool sedangSimpan = false;
+
+@override
+void initState() {
+  super.initState();
+
+  final asal = widget.pelangganAsal;
+
+  if (asal != null) {
+    nama.text = asal['nama']?.toString() ?? '';
+    syarikat.text = asal['syarikat']?.toString() ?? '';
+    telefon.text = asal['telefon']?.toString() ?? '';
+    emel.text = asal['emel']?.toString() ?? '';
+    alamat.text = asal['alamat']?.toString() ?? '';
+  }
+}
 
   Future<void> simpanPelanggan() async {
     if (sedangSimpan) return;
@@ -43,19 +63,50 @@ class _PelangganPageState extends State<PelangganPage> {
         prefs.getStringList('senarai_pelanggan') ?? [],
       );
 
-      final pelangganBaru = <String, dynamic>{
-        'id': DateTime.now()
-            .microsecondsSinceEpoch
-            .toString(),
-        'nama': nama.text.trim(),
-        'syarikat': syarikat.text.trim(),
-        'telefon': telefon.text.trim(),
-        'emel': emel.text.trim(),
-        'alamat': alamat.text.trim(),
-        'tarikh': DateTime.now().toIso8601String(),
-      };
+      
+final asal = widget.pelangganAsal;
+final sekarang = DateTime.now();
 
-      senarai.add(jsonEncode(pelangganBaru));
+final idAsal = asal?['id']?.toString();
+
+final id = idAsal != null && idAsal.isNotEmpty
+    ? idAsal
+    : sekarang.microsecondsSinceEpoch.toString();
+
+final pelangganBaru = <String, dynamic>{
+  'id': id,
+  'nama': nama.text.trim(),
+  'syarikat': syarikat.text.trim(),
+  'telefon': telefon.text.trim(),
+  'emel': emel.text.trim(),
+  'alamat': alamat.text.trim(),
+  'tarikh': asal?['tarikh'] ??
+      sekarang.toIso8601String(),
+  'dikemaskini': sekarang.toIso8601String(),
+};
+
+if (asal != null) {
+  final indeks = senarai.indexWhere((teks) {
+    try {
+      final rekod = jsonDecode(teks);
+
+      return rekod is Map &&
+          rekod['id']?.toString() == id;
+    } catch (_) {
+      return false;
+    }
+  });
+
+  if (indeks < 0) {
+    throw StateError(
+      'Rekod pelanggan asal tidak ditemui.',
+    );
+  }
+
+  senarai[indeks] = jsonEncode(pelangganBaru);
+} else {
+  senarai.add(jsonEncode(pelangganBaru));
+}
 
       final berjaya = await prefs.setStringList(
         'senarai_pelanggan',
