@@ -205,8 +205,8 @@ onPressed: () async {
 
   await navigator.push(
     MaterialPageRoute(
-      builder: (_) => SebutHargaPage(
-        rekodEdit: Map<String, dynamic>.from(rekod),
+      builder: (_) => SebutHargaPage(        
+        rekodEdit: Map<String, dynamic>.from(rekod[index]),
         indeksEdit: index,
       ),
     ),
