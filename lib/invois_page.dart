@@ -6,10 +6,12 @@ import 'pilih_pelanggan_page.dart';
 
 class InvoisPage extends StatefulWidget {
   final Map<String, dynamic>? invoisAsal;
+  final Map<String, dynamic>? sebutHargaAsal;
 
   const InvoisPage({
     super.key,
     this.invoisAsal,
+    this.sebutHargaAsal,
   });
 
   @override
@@ -87,6 +89,59 @@ bool sedangSimpan = false;
 @override
 void initState() {
   super.initState();
+
+final sebutHarga = widget.sebutHargaAsal;
+
+if (sebutHarga != null && widget.invoisAsal == null) {
+  pelanggan.text =
+      sebutHarga['pelanggan']?.toString() ?? '';
+
+  tajuk.text =
+      sebutHarga['tajuk']?.toString() ?? '';
+
+  final maklumatAsal =
+      sebutHarga['maklumat_pelanggan'];
+
+  if (maklumatAsal is Map) {
+    maklumatPelanggan =
+        Map<String, dynamic>.from(maklumatAsal);
+  }
+
+  final itemAsal = sebutHarga['items'];
+
+  if (itemAsal is List && itemAsal.isNotEmpty) {
+    for (final item in items) {
+      item.dispose();
+    }
+    items.clear();
+
+    for (final rekod in itemAsal) {
+      if (rekod is! Map) continue;
+
+      final item = _ItemInvois();
+
+      item.butiran.text =
+          rekod['butiran']?.toString() ?? '';
+      item.kuantiti.text =
+          rekod['kuantiti']?.toString() ?? '';
+      item.kadar.text =
+          rekod['kadar']?.toString() ?? '';
+
+      final unitAsal =
+          rekod['unit']?.toString() ?? 'unit';
+
+      item.unit = units.contains(unitAsal)
+          ? unitAsal
+          : 'unit';
+
+      items.add(item);
+    }
+
+    if (items.isEmpty) {
+      items.add(_ItemInvois());
+    }
+  }
+}
 
   final data = widget.invoisAsal;
 
