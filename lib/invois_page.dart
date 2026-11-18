@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'pilih_pelanggan_page.dart';
 
 class InvoisPage extends StatefulWidget {
   final Map<String, dynamic>? invoisAsal;
@@ -46,7 +47,8 @@ class _ItemInvois {
 
 class _InvoisPageState extends State<InvoisPage> {
   final nomborInvois = TextEditingController();
-  final pelanggan = TextEditingController();
+  final pelanggan = TextEditingController();  
+  Map<String, dynamic>? maklumatPelanggan;
   final tajuk = TextEditingController();
 
   final List<_ItemInvois> items = [_ItemInvois()];
@@ -95,6 +97,13 @@ void initState() {
 
   pelanggan.text =
       data['pelanggan']?.toString() ?? '';
+
+final maklumatAsal = data['maklumat_pelanggan'];
+
+if (maklumatAsal is Map) {
+  maklumatPelanggan =
+      Map<String, dynamic>.from(maklumatAsal);
+}
 
   tajuk.text =
       data['tajuk']?.toString() ?? '';
@@ -215,7 +224,14 @@ for (final teks in senarai) {
           DateTime.now().microsecondsSinceEpoch.toString(),
       'nombor_invois': rujukan,
       'pelanggan': pelanggan.text.trim(),
-      'tajuk': tajuk.text.trim(),
+      
+'maklumat_pelanggan':
+    maklumatPelanggan != null &&
+            pelanggan.text.trim() ==
+                (maklumatPelanggan!['nama']?.toString().trim() ?? '')
+        ? Map<String, dynamic>.from(maklumatPelanggan!)
+        : null,
+'tajuk': tajuk.text.trim(),
       'tarikh': invoisAsal?['tarikh'] ??
           DateTime.now().toIso8601String(),
       'items': items.map((item) => {
@@ -495,7 +511,37 @@ void tambahItem() {
 
           medan('No. Invois', nomborInvois),
           medan('Nama Pelanggan', pelanggan),
-          medan('Tajuk Projek / Kerja', tajuk),
+          
+const SizedBox(height: 8),
+
+OutlinedButton.icon(
+  onPressed: () async {
+    final dipilih =
+        await Navigator.push<Map<String, dynamic>>(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            const PilihPelangganPage(),
+      ),
+    );
+
+    if (!mounted || dipilih == null) return;
+
+    setState(() {
+      maklumatPelanggan =
+          Map<String, dynamic>.from(dipilih);
+
+      pelanggan.text =
+          dipilih['nama']?.toString() ?? '';
+    });
+  },
+  icon: const Icon(Icons.contact_page_outlined),
+  label: const Text('Pilih Pelanggan Tersimpan'),
+),
+
+const SizedBox(height: 12),
+          
+medan('Tajuk Projek / Kerja', tajuk),
 
           const SizedBox(height: 20),
 
