@@ -278,6 +278,15 @@ for (final teks in senarai) {
       'id': idAsal ??
           DateTime.now().microsecondsSinceEpoch.toString(),
       'nombor_invois': rujukan,
+ 
+      'rujukan_sebut_harga':
+          invoisAsal?['rujukan_sebut_harga'] ??
+          widget.sebutHargaAsal?['rujukan'],
+
+      'id_sebut_harga_asal':
+          invoisAsal?['id_sebut_harga_asal'] ??
+          widget.sebutHargaAsal?['id'],
+         
       'pelanggan': pelanggan.text.trim(),
       
 'maklumat_pelanggan':
