@@ -197,23 +197,26 @@ actions: [
     child: const Text('Tutup'),
   ),
   ElevatedButton.icon(
-    onPressed: () async {
-      Navigator.pop(context);
+    
+onPressed: () async {
+  final navigator = Navigator.of(context);
 
-      await Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => SebutHargaPage(
-            rekodEdit: Map<String, dynamic>.from(data),
-            indeksEdit: index,
-          ),
-        ),
-      );
+  navigator.pop();
 
-      if (context.mounted) {
-        await muatRekod();
-      }
-    },
+  await navigator.push(
+    MaterialPageRoute(
+      builder: (_) => SebutHargaPage(
+        rekodEdit: Map<String, dynamic>.from(rekod),
+        indeksEdit: index,
+      ),
+    ),
+  );
+
+  if (!mounted) return;
+
+  await muatRekod();
+},
+
     icon: const Icon(Icons.edit),
     label: const Text('Edit'),
   ),  
