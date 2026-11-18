@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'sebut_harga_page.dart';
+import 'invois_page.dart';
 class SenaraiSebutHargaPage extends StatefulWidget {
   const SenaraiSebutHargaPage({super.key});
 
@@ -189,7 +190,6 @@ content: SizedBox(
     ),
   ),
 ),
-
         
 actions: [
   TextButton(
@@ -220,6 +220,39 @@ onPressed: () async {
     icon: const Icon(Icons.edit),
     label: const Text('Edit'),
   ),  
+
+OutlinedButton.icon(
+  onPressed: () async {
+    Navigator.of(context).pop();
+
+    final berjaya = await Navigator.push<bool>(
+
+      context,
+      MaterialPageRoute(
+        builder: (_) => InvoisPage(
+          
+sebutHargaAsal: Map<String, dynamic>.from(
+  data,
+),
+        ),
+      ),
+    );
+
+    if (!mounted) return;
+
+    if (berjaya == true) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text(
+            'Invois berjaya dihasilkan daripada Sebut Harga',
+          ),
+        ),
+      );
+    }
+  },
+  icon: const Icon(Icons.receipt_long_outlined),
+  label: const Text('Tukar kepada Invois'),
+),
   TextButton.icon(
     onPressed: () async {
       final navigator = Navigator.of(context);
