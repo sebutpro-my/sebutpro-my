@@ -93,6 +93,24 @@ class JanaPdfInvois {
       ]);
     }
 
+final maklumatAsal = data['maklumat_pelanggan'];
+
+final maklumatPelanggan = maklumatAsal is Map
+    ? Map<String, dynamic>.from(maklumatAsal)
+    : <String, dynamic>{};
+
+String bacaPelanggan(String kunci) {
+  return maklumatPelanggan[kunci]
+          ?.toString()
+          .trim() ??
+      '';
+}
+
+final syarikatPelanggan = bacaPelanggan('syarikat');
+final alamatPelanggan = bacaPelanggan('alamat');
+final telefonPelanggan = bacaPelanggan('telefon');
+final emelPelanggan = bacaPelanggan('emel');
+
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -161,9 +179,35 @@ class JanaPdfInvois {
           pw.Text(
             'Tarikh: ${tarikh(data['tarikh'])}',
           ),
-          pw.Text(
-            'Pelanggan: ${data['pelanggan'] ?? '-'}',
-          ),
+          
+pw.SizedBox(height: 8),
+
+pw.Text(
+  'MAKLUMAT PELANGGAN / BILL TO',
+  style: pw.TextStyle(
+    fontSize: 10,
+    fontWeight: pw.FontWeight.bold,
+  ),
+),
+
+pw.SizedBox(height: 5),
+
+pw.Text(
+  'Nama Pelanggan: ${data['pelanggan'] ?? '-'}',
+),
+
+if (syarikatPelanggan.isNotEmpty)
+  pw.Text('Syarikat: $syarikatPelanggan'),
+
+if (alamatPelanggan.isNotEmpty)
+  pw.Text('Alamat: $alamatPelanggan'),
+
+if (telefonPelanggan.isNotEmpty)
+  pw.Text('Telefon: $telefonPelanggan'),
+
+if (emelPelanggan.isNotEmpty)
+  pw.Text('E-mel: $emelPelanggan'),
+
           pw.Text(
             'Tajuk Kerja: ${data['tajuk'] ?? '-'}',
           ),
