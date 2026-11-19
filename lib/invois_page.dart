@@ -312,6 +312,29 @@ if (invoisAsal == null && sumber != null) {
     }
   }
 
+if (mounted) {
+  await showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Diagnostik Invois'),
+      content: Text(
+        'ID Sebut Harga: $idSumber\n'
+        'Rujukan Sebut Harga: $rujukanSumber\n'
+        'Bilangan invois berkaitan: '
+        '${invoisBerkaitan.length}\n'
+        'Jumlah rekod invois: ${senarai.length}',
+      ),
+      actions: [
+        TextButton(
+          onPressed: () =>
+              Navigator.pop(dialogContext),
+          child: const Text('Tutup'),
+        ),
+      ],
+    ),
+  );
+}
+
   if (invoisBerkaitan.isNotEmpty) {
     if (!mounted) return;
 
