@@ -273,6 +273,88 @@ for (final teks in senarai) {
   }
 }
 
+final sumber = widget.sebutHargaAsal;
+
+if (invoisAsal == null && sumber != null) {
+  final idSumber =
+      sumber['id']?.toString().trim() ?? '';
+  final rujukanSumber =
+      sumber['rujukan']?.toString().trim() ?? '';
+
+  final invoisBerkaitan = <String>[];
+
+  for (final teks in senarai) {
+    final rekod = jsonDecode(teks);
+    if (rekod is! Map) continue;
+
+    final idRekod =
+        rekod['id_sebut_harga_asal']
+            ?.toString().trim() ?? '';
+    final rujukanRekod =
+        rekod['rujukan_sebut_harga']
+            ?.toString().trim() ?? '';
+
+    final samaId = idSumber.isNotEmpty &&
+        idRekod.isNotEmpty &&
+        idSumber == idRekod;
+
+    final samaRujukan =
+        (idSumber.isEmpty || idRekod.isEmpty) &&
+        rujukanSumber.isNotEmpty &&
+        rujukanRekod.isNotEmpty &&
+        rujukanSumber.toLowerCase() ==
+            rujukanRekod.toLowerCase();
+
+    if (samaId || samaRujukan) {
+      invoisBerkaitan.add(
+        rekod['nombor_invois']
+            ?.toString() ?? 'Tanpa nombor',
+      );
+    }
+  }
+
+  if (invoisBerkaitan.isNotEmpty) {
+    if (!mounted) return;
+
+    final teruskan = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text(
+          'Sebut Harga Sudah Mempunyai Invois',
+        ),
+        content: Text(
+          'Invois berkaitan:\n'
+          '${invoisBerkaitan.join(', ')}\n\n'
+          'Adakah anda mahu menghasilkan '
+          'invois baharu daripada Sebut Harga '
+          'yang sama?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, false),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () =>
+                Navigator.pop(dialogContext, true),
+            child: const Text('Teruskan'),
+          ),
+        ],
+      ),
+    );
+
+    if (teruskan != true) {
+      if (mounted) {
+        setState(() => sedangSimpan = false);
+      }
+      return;
+    }
+
+    if (!mounted) return;
+  }
+}
+
     final data = {
       
       'id': idAsal ??
