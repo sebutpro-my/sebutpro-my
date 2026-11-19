@@ -297,9 +297,8 @@ if (invoisAsal == null && sumber != null) {
     final samaId = idSumber.isNotEmpty &&
         idRekod.isNotEmpty &&
         idSumber == idRekod;
-
+    
     final samaRujukan =
-        (idSumber.isEmpty || idRekod.isEmpty) &&
         rujukanSumber.isNotEmpty &&
         rujukanRekod.isNotEmpty &&
         rujukanSumber.toLowerCase() ==
