@@ -176,6 +176,14 @@ final emelPelanggan = bacaPelanggan('emel');
           pw.Text(
             'No. Invois: ${data['nombor_invois'] ?? '-'}',
           ),
+          
+if ((data['rujukan_sebut_harga']
+            ?.toString()
+            .trim() ??
+        '').isNotEmpty)
+  pw.Text(
+    'Rujukan Sebut Harga: ${data['rujukan_sebut_harga']}',
+  ),
           pw.Text(
             'Tarikh: ${tarikh(data['tarikh'])}',
           ),
