@@ -199,8 +199,15 @@ if (teksTempoh.isNotEmpty &&
     'Tempoh sah mesti antara 1 hingga 365 hari',
   );
 }
+
+final idSediaAda =
+    widget.rekodEdit?['id']?.toString().trim();
    
 final data = {
+  'id': (idSediaAda != null && idSediaAda.isNotEmpty)
+      ? idSediaAda
+      : DateTime.now().microsecondsSinceEpoch.toString(),
+
   'pelanggan': pelanggan.text,
   'maklumat_pelanggan':
       maklumatPelanggan != null &&
