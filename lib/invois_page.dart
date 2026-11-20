@@ -319,7 +319,8 @@ if (mounted) {
       title: const Text('Diagnostik Invois'),
       content: Text(
         'ID Sebut Harga: $idSumber\n'
-        'Rujukan Sebut Harga: $rujukanSumber\n'
+        'Rujukan Sebut Harga: $rujukanSumber\n'       
+        'Kunci data sumber: ${sumber.keys.join(', ')}\n'
         'Bilangan invois berkaitan: '
         '${invoisBerkaitan.length}\n'
         'Jumlah rekod invois: ${senarai.length}',
