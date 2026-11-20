@@ -9,11 +9,13 @@ import 'pilih_pelanggan_page.dart';
 class SebutHargaPage extends StatefulWidget {
   final Map<String, dynamic>? rekodEdit;
   final int? indeksEdit;
+  final Map<String, dynamic>? bqAsal;
 
   const SebutHargaPage({
     super.key,
     this.rekodEdit,
     this.indeksEdit,
+    this.bqAsal,
   });
 
   @override
