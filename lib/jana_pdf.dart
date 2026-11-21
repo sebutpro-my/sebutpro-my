@@ -270,6 +270,8 @@ final adaItemBerbahagianBq = items.any((rekod) {
 
 final List<pw.Widget> jadualBahagianBq = [];
 
+final List<Map<String, dynamic>> ringkasanKosBq = [];
+
 if (adaItemBerbahagianBq) {
   for (final entry in itemMengikutBahagian.entries) {
     final kunci = entry.key;
@@ -300,6 +302,11 @@ if (adaItemBerbahagianBq) {
         wang(jumlah),
       ]);
     }
+
+ringkasanKosBq.add({
+  'bahagian': nama,
+  'jumlah': subtotal,
+});
 
     jadualBahagianBq.add(
       pw.NewPage(freeSpace: 100),
@@ -373,6 +380,63 @@ if (adaItemBerbahagianBq) {
       pw.SizedBox(height: 18),
     );
   }
+}
+
+final List<pw.Widget> paparanRingkasanKosBq = [];
+
+if (ringkasanKosBq.isNotEmpty) {
+  paparanRingkasanKosBq.add(
+    pw.NewPage(freeSpace: 120),
+  );
+
+  paparanRingkasanKosBq.add(
+    pw.Text(
+      'RINGKASAN KOS BQ',
+      style: pw.TextStyle(
+        fontSize: 11,
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.blue900,
+      ),
+    ),
+  );
+
+  paparanRingkasanKosBq.add(
+    pw.SizedBox(height: 10),
+  );
+
+  paparanRingkasanKosBq.add(
+    pw.TableHelper.fromTextArray(
+      headers: [
+        'Bahagian',
+        'Jumlah (RM)',
+      ],
+      data: ringkasanKosBq.map((rekod) {
+        return [
+          rekod['bahagian'].toString(),
+          wang((rekod['jumlah'] as num).toDouble()),
+        ];
+      }).toList(),
+      headerStyle: pw.TextStyle(
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.white,
+        fontSize: 9,
+      ),
+      headerDecoration: const pw.BoxDecoration(
+        color: PdfColors.blue900,
+      ),
+      cellStyle: const pw.TextStyle(
+        fontSize: 9,
+      ),
+      columnWidths: {
+        0: const pw.FlexColumnWidth(4),
+        1: const pw.FlexColumnWidth(2),
+      },
+    ),
+  );
+
+  paparanRingkasanKosBq.add(
+    pw.SizedBox(height: 12),
+  );
 }
 
     pdf.addPage(
@@ -536,6 +600,9 @@ if (!adaItemBerbahagianBq)
               5: const pw.FixedColumnWidth(72),
             },
           ),
+        
+      if (adaItemBerbahagianBq) ...paparanRingkasanKosBq,
+          
           pw.SizedBox(height: 20),
           pw.Align(
             alignment: pw.Alignment.centerRight,
