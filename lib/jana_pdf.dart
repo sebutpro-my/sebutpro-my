@@ -301,6 +301,10 @@ if (adaItemBerbahagianBq) {
     }
 
     jadualBahagianBq.add(
+      pw.NewPage(freeSpace: 100),
+    );
+
+    jadualBahagianBq.add(
       pw.Text(
         nama.toUpperCase(),
         style: pw.TextStyle(
