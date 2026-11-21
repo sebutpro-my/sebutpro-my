@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'dart:typed_data';
 import 'signature_pad_page.dart';
 import 'pilih_pelanggan_page.dart';
+import 'pilih_bq_sebut_harga_page.dart';
 
 class SebutHargaPage extends StatefulWidget {
   final Map<String, dynamic>? rekodEdit;
@@ -648,7 +649,51 @@ setState(() {
 
 const SizedBox(height: 12),
 medan('Tajuk Projek / Kerja', tajuk),
-          const SizedBox(height: 12),
+       
+if (widget.rekodEdit == null && widget.bqAsal == null) ...[
+  const SizedBox(height: 12),
+  OutlinedButton.icon(
+    onPressed: () async {
+      final teruskan = await showDialog<bool>(
+        context: context,
+        builder: (dialogContext) => AlertDialog(
+          title: const Text('Import BQ Tersimpan'),
+          content: const Text(
+            'Borang semasa akan digantikan dengan '
+            'borang Sebut Harga berdasarkan BQ yang dipilih. '
+            'Maklumat yang belum disimpan akan hilang. '
+            'Adakah anda mahu teruskan?',
+          ),
+          actions: [
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, false),
+              child: const Text('Batal'),
+            ),
+            TextButton(
+              onPressed: () =>
+                  Navigator.pop(dialogContext, true),
+              child: const Text('Teruskan'),
+            ),
+          ],
+        ),
+      );
+
+      if (teruskan != true || !mounted) return;
+
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (_) => const PilihBqSebutHargaPage(),
+        ),
+      );
+    },
+    icon: const Icon(Icons.playlist_add),
+    label: const Text('Import daripada BQ Tersimpan'),
+  ),
+],
+          
+   const SizedBox(height: 12),
           TextField(
             controller: rujukan,
             readOnly: modRujukan == 'auto',
