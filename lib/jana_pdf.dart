@@ -100,7 +100,29 @@ final copSyarikat =
 
     final tajuk = data['tajuk']?.toString() ?? '-';
     final rujukan = data['rujukan']?.toString() ?? '';
-    final pelanggan =
+   
+final idBqAsal =
+    data['id_bq_asal']?.toString().trim() ?? '';
+
+final tajukBqAsal =
+    data['tajuk_bq_asal']?.toString().trim() ?? '';
+
+final formatBqAsal =
+    data['format_bq_asal']?.toString().trim() ?? '';
+
+final adaBqAsal =
+    idBqAsal.isNotEmpty ||
+    tajukBqAsal.isNotEmpty ||
+    formatBqAsal.isNotEmpty;
+
+final labelFormatBq =
+    formatBqAsal.toLowerCase() == 'jkr'
+        ? 'BQ Gaya JKR'
+        : formatBqAsal.toLowerCase() == 'komersial'
+            ? 'BQ Komersial'
+            : formatBqAsal;
+    
+ final pelanggan =
         data['pelanggan']?.toString() ?? '-';
  
 final maklumatAsal = data['maklumat_pelanggan'];
@@ -301,7 +323,28 @@ if (emelPelanggan.isNotEmpty)
               fontWeight: pw.FontWeight.bold,
             ),
           ),
-          pw.SizedBox(height: 20),
+         
+if (adaBqAsal) ...[
+  pw.SizedBox(height: 10),
+  pw.Text(
+    'MAKLUMAT BQ ASAL',
+    style: pw.TextStyle(
+      fontSize: 10,
+      fontWeight: pw.FontWeight.bold,
+    ),
+  ),
+  pw.SizedBox(height: 5),
+
+  if (tajukBqAsal.isNotEmpty)
+    pw.Text('Tajuk BQ: $tajukBqAsal'),
+
+  if (labelFormatBq.isNotEmpty)
+    pw.Text('Format BQ: $labelFormatBq'),
+
+  if (idBqAsal.isNotEmpty)
+    pw.Text('ID BQ: $idBqAsal'),
+],
+ pw.SizedBox(height: 20),
           pw.TableHelper.fromTextArray(
             headers: [
               'Bil.',
