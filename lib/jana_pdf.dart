@@ -178,6 +178,11 @@ final tarikhDokumen = tarikh(data['tarikh']);
 
     final List<List<String>> jadual = [];
 
+    final Map<String, List<Map<String, dynamic>>>
+        itemMengikutBahagian = {};
+
+    final Map<String, String> namaBahagian = {};
+
     for (var i = 0; i < items.length; i++) {
       final rekod = items[i];
 
@@ -190,6 +195,39 @@ final tarikhDokumen = tarikh(data['tarikh']);
       final kadar = nombor(rekod['kadar']);
       final jumlah = kuantiti * kadar;
 
+final idBahagian =
+    rekod['id_bahagian_bq']?.toString().trim() ?? '';
+
+final namaBahagianItem =
+    rekod['nama_bahagian_bq']?.toString().trim() ?? '';
+
+final kunciBahagian = idBahagian.isNotEmpty
+    ? 'id:$idBahagian'
+    : namaBahagianItem.isNotEmpty
+        ? 'nama:$namaBahagianItem'
+        : '__tanpa_bahagian__';
+
+itemMengikutBahagian.putIfAbsent(
+  kunciBahagian,
+  () => <Map<String, dynamic>>[],
+);
+
+itemMengikutBahagian[kunciBahagian]!.add({
+  'bil': i + 1,
+  'butiran': butiran,
+  'unit': unit,
+  'kuantiti': kuantiti,
+  'kadar': kadar,
+  'jumlah': jumlah,
+});
+
+namaBahagian.putIfAbsent(
+  kunciBahagian,
+  () => namaBahagianItem.isNotEmpty
+      ? namaBahagianItem
+      : 'LAIN-LAIN KERJA',
+);
+
       jadual.add([
         '${i + 1}',
         butiran,
@@ -199,6 +237,18 @@ final tarikhDokumen = tarikh(data['tarikh']);
         wang(jumlah),
       ]);
     }
+
+final adaItemBerbahagianBq = items.any((rekod) {
+  if (rekod is! Map) return false;
+
+  final id =
+      rekod['id_bahagian_bq']?.toString().trim() ?? '';
+
+  final nama =
+      rekod['nama_bahagian_bq']?.toString().trim() ?? '';
+
+  return id.isNotEmpty || nama.isNotEmpty;
+});
 
     final jumlahKeseluruhan = items.fold<double>(
       0,
@@ -217,6 +267,108 @@ final tarikhDokumen = tarikh(data['tarikh']);
     final bakiPembayaran = amaunDeposit != null
         ? jumlahKeseluruhan - amaunDeposit
         : null;
+
+final List<pw.Widget> jadualBahagianBq = [];
+
+if (adaItemBerbahagianBq) {
+  for (final entry in itemMengikutBahagian.entries) {
+    final kunci = entry.key;
+    final senaraiItem = entry.value;
+
+    if (senaraiItem.isEmpty) continue;
+
+    final nama = namaBahagian[kunci] ?? 'LAIN-LAIN KERJA';
+
+    double subtotal = 0;
+
+    final baris = <List<String>>[];
+
+    for (final item in senaraiItem) {
+      final kuantiti = (item['kuantiti'] as num).toDouble();
+      final kadar = (item['kadar'] as num).toDouble();
+      final jumlah = kuantiti * kadar;
+
+      subtotal += jumlah;
+
+      baris.add([
+        item['bil'].toString(),
+        item['butiran'].toString(),
+        item['unit'].toString(),
+        kuantiti.toStringAsFixed(2),
+        wang(kadar),
+        wang(jumlah),
+      ]);
+    }
+
+    jadualBahagianBq.add(
+      pw.Text(
+        nama.toUpperCase(),
+        style: pw.TextStyle(
+          fontSize: 10,
+          fontWeight: pw.FontWeight.bold,
+        ),
+      ),
+    );
+
+    jadualBahagianBq.add(
+      pw.SizedBox(height: 8),
+    );
+
+    jadualBahagianBq.add(
+      pw.TableHelper.fromTextArray(
+        headers: [
+          'Bil.',
+          'Butiran Kerja',
+          'Unit',
+          'Kuantiti',
+          'Kadar',
+          'Jumlah',
+        ],
+        data: baris,
+        headerStyle: pw.TextStyle(
+          fontWeight: pw.FontWeight.bold,
+          color: PdfColors.white,
+          fontSize: 9,
+        ),
+        headerDecoration: const pw.BoxDecoration(
+          color: PdfColors.blue900,
+        ),
+        cellStyle: const pw.TextStyle(
+          fontSize: 8,
+        ),
+        columnWidths: {
+          0: const pw.FixedColumnWidth(25),
+          1: const pw.FlexColumnWidth(4),
+          2: const pw.FixedColumnWidth(35),
+          3: const pw.FixedColumnWidth(48),
+          4: const pw.FixedColumnWidth(65),
+          5: const pw.FixedColumnWidth(72),
+        },
+      ),
+    );
+
+    jadualBahagianBq.add(
+      pw.SizedBox(height: 6),
+    );
+
+    jadualBahagianBq.add(
+      pw.Align(
+        alignment: pw.Alignment.centerRight,
+        child: pw.Text(
+          'SUBTOTAL $nama: ${wang(subtotal)}',
+          style: pw.TextStyle(
+            fontSize: 10,
+            fontWeight: pw.FontWeight.bold,
+          ),
+        ),
+      ),
+    );
+
+    jadualBahagianBq.add(
+      pw.SizedBox(height: 18),
+    );
+  }
+}
 
     pdf.addPage(
       pw.MultiPage(
@@ -345,7 +497,10 @@ if (adaBqAsal) ...[
     pw.Text('ID BQ: $idBqAsal'),
 ],
  pw.SizedBox(height: 20),
-          pw.TableHelper.fromTextArray(
+   
+if (adaItemBerbahagianBq) ...jadualBahagianBq,
+if (!adaItemBerbahagianBq)
+       pw.TableHelper.fromTextArray(
             headers: [
               'Bil.',
               'Butiran Kerja',
