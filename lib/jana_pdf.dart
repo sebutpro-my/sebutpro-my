@@ -282,6 +282,7 @@ if (adaItemBerbahagianBq) {
     double subtotal = 0;
 
     final baris = <List<String>>[];
+    int bilBahagian = 0;
 
     for (final item in senaraiItem) {
       final kuantiti = (item['kuantiti'] as num).toDouble();
@@ -291,7 +292,7 @@ if (adaItemBerbahagianBq) {
       subtotal += jumlah;
 
       baris.add([
-        item['bil'].toString(),
+        '${++bilBahagian}',
         item['butiran'].toString(),
         item['unit'].toString(),
         kuantiti.toStringAsFixed(2),
