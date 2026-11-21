@@ -410,12 +410,20 @@ if (ringkasanKosBq.isNotEmpty) {
         'Bahagian',
         'Jumlah (RM)',
       ],
-      data: ringkasanKosBq.map((rekod) {
-        return [
-          rekod['bahagian'].toString(),
-          wang((rekod['jumlah'] as num).toDouble()),
-        ];
-      }).toList(),
+      
+      data: [
+        ...ringkasanKosBq.map((rekod) {
+          return [
+            rekod['bahagian'].toString(),
+            wang((rekod['jumlah'] as num).toDouble()),
+          ];
+        }),
+        [
+          'JUMLAH KESELURUHAN',
+          wang(jumlahKeseluruhan),
+        ],
+      ],
+
       headerStyle: pw.TextStyle(
         fontWeight: pw.FontWeight.bold,
         color: PdfColors.white,
@@ -602,8 +610,11 @@ if (!adaItemBerbahagianBq)
           ),
         
       if (adaItemBerbahagianBq) ...paparanRingkasanKosBq,
-          
-          pw.SizedBox(height: 20),
+                
+      if (!adaItemBerbahagianBq)
+        pw.SizedBox(height: 20),
+
+      if (!adaItemBerbahagianBq)
           pw.Align(
             alignment: pw.Alignment.centerRight,
             child: pw.Text(
