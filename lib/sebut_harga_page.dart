@@ -28,7 +28,10 @@ class _ItemKerja {
   final kuantiti = TextEditingController();
   final kadar = TextEditingController();
   String unit = 'm²';
-
+  
+  String? idBahagianBq;
+  String? namaBahagianBq;
+  
   double get jumlah {
     final qty = double.tryParse(
           kuantiti.text.replaceAll(',', ''),
@@ -101,6 +104,9 @@ if (data == null) {
           if (butiran.isEmpty) continue;
 
           final item = _ItemKerja();
+
+          item.idBahagianBq = seksyen['id']?.toString();
+          item.namaBahagianBq = seksyen['nama']?.toString();
 
           item.butiran.text = butiran;
           item.unit =
@@ -193,6 +199,12 @@ termaPembayaran.text =
         if (rekod is! Map) continue;
 
         final item = _ItemKerja();
+       
+        item.idBahagianBq =
+            rekod['id_bahagian_bq']?.toString();
+
+        item.namaBahagianBq =
+            rekod['nama_bahagian_bq']?.toString();
         item.butiran.text = rekod['butiran']?.toString() ?? '';
         item.unit = rekod['unit']?.toString() ?? 'm²';
         item.kuantiti.text = rekod['kuantiti']?.toString() ?? '';
@@ -312,7 +324,9 @@ final data = {
       'butiran': item.butiran.text,
       'unit': item.unit,
       'kuantiti': item.kuantiti.text,
-      'kadar': item.kadar.text,
+      'kadar': item.kadar.text,   
+      'id_bahagian_bq': item.idBahagianBq,
+      'nama_bahagian_bq': item.namaBahagianBq,
     }).toList(),
     'jumlah': jumlahKeseluruhan,
   };
