@@ -74,7 +74,62 @@ Uint8List? tandatanganPelanggan;
     muatTetapanRujukan();
     
     final data = widget.rekodEdit;
-    if (data == null) return;
+    
+if (data == null) {
+  final bq = widget.bqAsal;
+
+  if (bq != null) {
+    tajuk.text = bq['tajuk']?.toString() ?? '';
+
+    final bahagianBq = bq['bahagian'];
+    final itemImport = <_ItemKerja>[];
+
+    if (bahagianBq is List) {
+      for (final seksyen in bahagianBq) {
+        if (seksyen is! Map) continue;
+
+        final senaraiItem = seksyen['items'];
+        if (senaraiItem is! List) continue;
+
+        for (final rekod in senaraiItem) {
+          if (rekod is! Map) continue;
+
+          final butiran =
+              rekod['butiran']?.toString().trim() ?? '';
+
+          if (butiran.isEmpty) continue;
+
+          final item = _ItemKerja();
+
+          item.butiran.text = butiran;
+          item.unit =
+              rekod['unit']?.toString() ?? 'm²';
+
+          item.kuantiti.text =
+              rekod['kuantiti']?.toString() ?? '0';
+
+          item.kadar.text =
+              rekod['kadar']?.toString() ?? '0';
+
+          itemImport.add(item);
+        }
+      }
+    }
+
+    if (itemImport.isNotEmpty) {
+      for (final item in items) {
+        item.dispose();
+      }
+
+      items
+        ..clear()
+        ..addAll(itemImport);
+    }
+
+  }
+
+  return;
+}
 
     pelanggan.text = data['pelanggan']?.toString() ?? '';
    
