@@ -281,6 +281,22 @@ final data = {
   'tajuk': tajuk.text,
   'rujukan': rujukan.text.trim(),
 
+'id_bq_asal':
+    widget.rekodEdit?['id_bq_asal'] ??
+    widget.bqAsal?['id'],
+
+'tajuk_bq_asal':
+    widget.rekodEdit?['tajuk_bq_asal'] ??
+    widget.bqAsal?['tajuk'],
+
+'format_bq_asal':
+    widget.rekodEdit?['format_bq_asal'] ??
+    widget.bqAsal?['format'],
+
+'bahagian_bq_asal':
+    widget.rekodEdit?['bahagian_bq_asal'] ??
+    widget.bqAsal?['bahagian'],
+
 'tandatangan_kontraktor': tandatanganKontraktor == null
     ? null
     : base64Encode(tandatanganKontraktor!),
