@@ -788,7 +788,9 @@ if (tandatanganKontraktor != null ||
           ),
         ],
       ),
-      pw.SizedBox(height: 16),
+      
+          pw.SizedBox(height: 4),
+
     ],
   ),
 
