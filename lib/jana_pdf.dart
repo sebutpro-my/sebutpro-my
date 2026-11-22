@@ -707,7 +707,7 @@ if (adaMaklumatBank)
 if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
-  pw.NewPage(freeSpace: 190),
+  pw.NewPage(freeSpace: 300),
 
 pw.SizedBox(height: 24),
 
