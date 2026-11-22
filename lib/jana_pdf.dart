@@ -800,7 +800,7 @@ pw.Table(
                     fit: pw.BoxFit.contain,
                   )
                 else
-                  pw.SizedBox(height: 65),
+                  pw.SizedBox(height: 40),
                 pw.SizedBox(height: 8),
                 pw.Divider(),
                 pw.Text(
