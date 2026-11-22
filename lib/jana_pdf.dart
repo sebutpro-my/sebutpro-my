@@ -712,8 +712,12 @@ if (tandatanganKontraktor != null ||
 if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
-  pw.Container(
-    child: pw.Column(
+pw.Table(
+  children: [
+    pw.TableRow(
+      children: [
+        pw.Column(
+
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.SizedBox(height: 24),
@@ -793,14 +797,17 @@ if (tandatanganKontraktor != null ||
           ),
         ],
       ),   
-      
-          pw.SizedBox(height: 4),
+           
+                pw.SizedBox(height: 4),
+                ],
+                ),
+                      ],
+                    ),
+                  ],
+                ),
 
-    ],
-  ),
-),
-          
-          pw.Divider(),
+                pw.Divider(),
+
           pw.Text(
             'Dokumen dijana menggunakan SebutPro MY.',
             style: const pw.TextStyle(
