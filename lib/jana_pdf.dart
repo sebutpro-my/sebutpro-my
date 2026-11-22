@@ -825,7 +825,6 @@ pw.Table(
          
         ],
       ),
-    ),
     );
 
     await Printing.layoutPdf(
