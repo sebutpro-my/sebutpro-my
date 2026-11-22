@@ -707,19 +707,12 @@ if (adaMaklumatBank)
 if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
-  pw.NewPage(freeSpace: 300),
+  pw.Container(
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.SizedBox(height: 24),
 
-pw.SizedBox(height: 24),
-
-if (tandatanganKontraktor != null ||
-    tandatanganPelanggan != null ||
-    copSyarikat != null)
-
-pw.Container(
-  child: pw.Column(
-
-    crossAxisAlignment: pw.CrossAxisAlignment.start,
-    children: [
       pw.Text(
         'TANDATANGAN',
         style: pw.TextStyle(
