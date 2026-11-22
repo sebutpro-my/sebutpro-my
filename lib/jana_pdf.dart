@@ -794,14 +794,14 @@ pw.Container(
             ),
           ),
         ],
-      ),
-    ),    
+      ),   
       
           pw.SizedBox(height: 4),
 
     ],
   ),
-
+),
+          
           pw.Divider(),
           pw.Text(
             'Dokumen dijana menggunakan SebutPro MY.',
