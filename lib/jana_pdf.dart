@@ -451,6 +451,28 @@ if (ringkasanKosBq.isNotEmpty) {
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(32),
+        
+footer: (context) {
+  if (context.pageNumber != context.pagesCount) {
+    return pw.SizedBox();
+  }
+
+  return pw.Column(
+    mainAxisSize: pw.MainAxisSize.min,
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Divider(),
+      pw.Text(
+        'Dokumen dijana menggunakan SebutPro MY.',
+        style: const pw.TextStyle(
+          fontSize: 8,
+          color: PdfColors.grey700,
+        ),
+      ),
+    ],
+  );
+},
+
         build: (context) => [
           
 pw.Center(
@@ -800,18 +822,10 @@ pw.Table(
                     ),
                   ],
                 ),
-
-                pw.Divider(),
-
-          pw.Text(
-            'Dokumen dijana menggunakan SebutPro MY.',
-            style: const pw.TextStyle(
-              fontSize: 8,
-              color: PdfColors.grey700,
-            ),
-          ),
+         
         ],
       ),
+    ),
     );
 
     await Printing.layoutPdf(
