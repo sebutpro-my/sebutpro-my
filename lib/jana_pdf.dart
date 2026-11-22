@@ -739,18 +739,8 @@ if (tandatanganKontraktor != null ||
                   )
                 else
                   pw.SizedBox(height: 65),
-                
-if (copSyarikat != null) ...[
-  pw.SizedBox(height: 6),
-  pw.Image(
-    pw.MemoryImage(copSyarikat),
-    height: 55,
-    width: 100,
-    fit: pw.BoxFit.contain,
-  ),
-],
-                
-pw.SizedBox(height: 8),
+                              
+                pw.SizedBox(height: 8),
                 pw.Divider(),
                 pw.Text(
                   'Tandatangan Kontraktor',
@@ -758,6 +748,16 @@ pw.SizedBox(height: 8),
                     fontSize: 9,
                   ),
                 ),
+                
+                if (copSyarikat != null) ...[
+                  pw.SizedBox(height: 6),
+                  pw.Image(
+                    pw.MemoryImage(copSyarikat),
+                    height: 55,
+                    width: 100,
+                    fit: pw.BoxFit.contain,
+                  ),
+                ],
               ],
             ),
           ),
