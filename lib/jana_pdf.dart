@@ -715,7 +715,9 @@ if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
 
-  pw.Column(
+pw.Container(
+  child: pw.Column(
+
     crossAxisAlignment: pw.CrossAxisAlignment.start,
     children: [
       pw.Text(
@@ -793,6 +795,7 @@ if (tandatanganKontraktor != null ||
           ),
         ],
       ),
+    ),    
       
           pw.SizedBox(height: 4),
 
