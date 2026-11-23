@@ -155,23 +155,7 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
           '${duaDigit(sekarang.minute)}'
           '${duaDigit(sekarang.second)}.json';
 
-      final blob = html.Blob(
-        [utf8.encode(jsonTeks)],
-        'application/json;charset=utf-8',
-      );
-
-      final url = html.Url.createObjectUrlFromBlob(blob);
-
-      final pautan = html.AnchorElement(href: url)
-        ..download = namaFail;
-
-      pautan.click();
-
-      await Future<void>.delayed(
-        const Duration(seconds: 2),
-      );
-
-      html.Url.revokeObjectUrl(url);
+      await muatTurunJson(namaFail, jsonTeks);
 
       if (!mounted) return;
 
