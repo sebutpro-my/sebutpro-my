@@ -729,11 +729,15 @@ if (adaMaklumatBank)
 if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
-pw.Table(
-  children: [
-    pw.TableRow(
-      children: [
-        pw.Column(
+  pw.Table(
+    border: pw.TableBorder.all(
+      color: PdfColors.red,
+      width: 1,
+    ),
+    children: [
+      pw.TableRow(
+        children: [
+          pw.Column(
 
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
