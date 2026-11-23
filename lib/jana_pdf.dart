@@ -729,20 +729,10 @@ if (adaMaklumatBank)
 if (tandatanganKontraktor != null ||
     tandatanganPelanggan != null ||
     copSyarikat != null)
-  pw.Table(
-    border: pw.TableBorder.all(
-      color: PdfColors.red,
-      width: 1,
-    ),
+  pw.Column(
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
     children: [
-      pw.TableRow(
-        children: [
-          pw.Column(
-
-      crossAxisAlignment: pw.CrossAxisAlignment.start,
-      children: [
-        pw.SizedBox(height: 8),
-
+      pw.SizedBox(height: 8),
       pw.Text(
         'TANDATANGAN',
         style: pw.TextStyle(
@@ -753,23 +743,19 @@ if (tandatanganKontraktor != null ||
       ),
       pw.SizedBox(height: 6),
       pw.Row(
-        crossAxisAlignment:
-            pw.CrossAxisAlignment.start,
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
         children: [
           pw.Expanded(
             child: pw.Column(
               children: [
                 if (tandatanganKontraktor != null)
                   pw.Image(
-                    pw.MemoryImage(
-                      tandatanganKontraktor,
-                    ),
+                    pw.MemoryImage(tandatanganKontraktor),
                     height: 65,
                     fit: pw.BoxFit.contain,
                   )
                 else
-                  pw.SizedBox(height: 65),
-                              
+                  pw.SizedBox(height: 40),
                 pw.SizedBox(height: 8),
                 pw.Divider(),
                 pw.Text(
@@ -778,7 +764,6 @@ if (tandatanganKontraktor != null ||
                     fontSize: 9,
                   ),
                 ),
-                
                 if (copSyarikat != null) ...[
                   pw.SizedBox(height: 6),
                   pw.Image(
@@ -797,9 +782,7 @@ if (tandatanganKontraktor != null ||
               children: [
                 if (tandatanganPelanggan != null)
                   pw.Image(
-                    pw.MemoryImage(
-                      tandatanganPelanggan,
-                    ),
+                    pw.MemoryImage(tandatanganPelanggan),
                     height: 65,
                     fit: pw.BoxFit.contain,
                   )
@@ -817,16 +800,11 @@ if (tandatanganKontraktor != null ||
             ),
           ),
         ],
-      ),   
-           
-                pw.SizedBox(height: 4),
-                ],
-                ),
-                      ],
-                    ),
-                  ],
-                ),
-         
+      ),
+      pw.SizedBox(height: 4),
+    ],
+  ),
+                      
         ],
       ),
     );
