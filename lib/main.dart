@@ -9,6 +9,7 @@ import 'senarai_invois_page.dart';
 import 'bq_terperinci_page.dart';
 import 'senarai_bq_page.dart';
 import 'senarai_pelanggan_page.dart';
+import 'backup_restore_page.dart';
 
 void main() {
   runApp(const SebutProApp());
@@ -116,7 +117,12 @@ _menu(
   'Tetapan Nombor Rujukan',
   'Format rujukan manual atau automatik',
 ),
-
+_menu(
+  context,
+  Icons.backup_outlined,
+  'Backup & Restore',
+  'Sandaran dan pemulihan data aplikasi',
+),
         ],
       ),
     );
@@ -218,7 +224,13 @@ onTap: () {
       builder: (context) => const SenaraiPelangganPage(),
     ),
   );
- 
+ } else if (title == 'Backup & Restore') {
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => const BackupRestorePage(),
+    ),
+  );
 } else {
   ScaffoldMessenger.of(context).showSnackBar(
     SnackBar(
