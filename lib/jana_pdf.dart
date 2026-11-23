@@ -737,7 +737,7 @@ pw.Table(
 
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.SizedBox(height: 24),
+        pw.SizedBox(height: 8),
 
       pw.Text(
         'TANDATANGAN',
@@ -747,7 +747,7 @@ pw.Table(
           color: PdfColors.blue900,
         ),
       ),
-      pw.SizedBox(height: 12),
+      pw.SizedBox(height: 6),
       pw.Row(
         crossAxisAlignment:
             pw.CrossAxisAlignment.start,
@@ -779,8 +779,8 @@ pw.Table(
                   pw.SizedBox(height: 6),
                   pw.Image(
                     pw.MemoryImage(copSyarikat),
-                    height: 55,
-                    width: 100,
+                    height: 35,
+                    width: 80,
                     fit: pw.BoxFit.contain,
                   ),
                 ],
