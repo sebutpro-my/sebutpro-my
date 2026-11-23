@@ -163,6 +163,7 @@ final statusPembayaran = jumlahDibayar <= 0
                       style: pw.TextStyle(
                         fontSize: 16,
                         fontWeight: pw.FontWeight.bold,
+                        color: PdfColors.blue900,
                       ),
                     ),
                     if (baca('ssm').isNotEmpty)
@@ -197,6 +198,7 @@ final statusPembayaran = jumlahDibayar <= 0
               style: pw.TextStyle(
                 fontSize: 20,
                 fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900, 
               ),
             ),
           ),
@@ -268,10 +270,11 @@ if (emelPelanggan.isNotEmpty)
             headerStyle: pw.TextStyle(
               fontWeight: pw.FontWeight.bold,
               fontSize: 9,
+              color: PdfColors.white,
             ),
             cellStyle: const pw.TextStyle(fontSize: 9),
             headerDecoration: const pw.BoxDecoration(
-              color: PdfColors.grey300,
+              color: PdfColors.blue900,
             ),
             cellPadding: const pw.EdgeInsets.all(5),
             columnWidths: {
@@ -294,6 +297,7 @@ if (emelPelanggan.isNotEmpty)
               style: pw.TextStyle(
                 fontSize: 13,
                 fontWeight: pw.FontWeight.bold,
+                color: PdfColors.blue900,
               ),
             ),
           ),
