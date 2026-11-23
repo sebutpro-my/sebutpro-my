@@ -111,6 +111,36 @@ final alamatPelanggan = bacaPelanggan('alamat');
 final telefonPelanggan = bacaPelanggan('telefon');
 final emelPelanggan = bacaPelanggan('emel');
 
+double bacaNilai(dynamic nilai) {
+  if (nilai is num) return nilai.toDouble();
+
+  final teks = nilai?.toString().replaceAll(',', '') ?? '';
+  return double.tryParse(teks) ?? 0.0;
+}
+
+final jumlahInvois = bacaNilai(data['jumlah']);
+
+final rekodAsal = data['rekod_bayaran'];
+final rekodBayaran = rekodAsal is List ? rekodAsal : [];
+
+double jumlahDibayar = 0.0;
+
+for (final rekod in rekodBayaran) {
+  if (rekod is Map) {
+    jumlahDibayar += bacaNilai(rekod['jumlah']);
+  }
+}
+
+final bakiTertunggak =
+    (jumlahInvois - jumlahDibayar)
+        .clamp(0.0, double.infinity);
+
+final statusPembayaran = jumlahDibayar <= 0
+    ? 'Belum Bayar'
+    : bakiTertunggak > 0
+        ? 'Bayar Sebahagian'
+        : 'Selesai Bayar';
+
     final pdf = pw.Document();
 
     pdf.addPage(
@@ -267,6 +297,46 @@ if (emelPelanggan.isNotEmpty)
               ),
             ),
           ),
+
+pw.SizedBox(height: 16),
+
+pw.Column(
+  crossAxisAlignment: pw.CrossAxisAlignment.start,
+  children: [
+    pw.Text(
+      'RINGKASAN PEMBAYARAN',
+      style: pw.TextStyle(
+        fontSize: 11,
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.blue900,
+      ),
+    ),
+    pw.SizedBox(height: 8),
+    pw.Text(
+      'Jumlah Invois: ${wang(jumlahInvois)}',
+      style: const pw.TextStyle(fontSize: 10),
+    ),
+    pw.SizedBox(height: 4),
+    pw.Text(
+      'Jumlah Dibayar: ${wang(jumlahDibayar)}',
+      style: const pw.TextStyle(fontSize: 10),
+    ),
+    pw.SizedBox(height: 4),
+    pw.Text(
+      'Baki Tertunggak: ${wang(bakiTertunggak)}',
+      style: pw.TextStyle(
+        fontSize: 10,
+        fontWeight: pw.FontWeight.bold,
+        color: PdfColors.blue900,
+      ),
+    ),
+    pw.SizedBox(height: 6),
+    pw.Text(
+      'Status: $statusPembayaran',
+      style: const pw.TextStyle(fontSize: 10),
+    ),
+  ],
+),
 
           pw.SizedBox(height: 25),
 
