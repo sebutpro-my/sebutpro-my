@@ -147,7 +147,29 @@ final statusPembayaran = jumlahDibayar <= 0
       pw.MultiPage(
         pageFormat: PdfPageFormat.a4,
         margin: const pw.EdgeInsets.all(30),
-        build: (context) => [
+
+         footer: (context) {
+           if (context.pageNumber != context.pagesCount) {
+             return pw.SizedBox();
+           }
+
+           return pw.Column(
+             mainAxisSize: pw.MainAxisSize.min,
+             crossAxisAlignment: pw.CrossAxisAlignment.start,
+             children: [
+               pw.Divider(),
+               pw.Text(
+                 'Dokumen dijana menggunakan SebutPro MY.',
+                 style: const pw.TextStyle(
+                   fontSize: 8,
+                   color: PdfColors.grey700,
+                 ),
+               ),
+             ],
+           );
+         },
+
+         build: (context) => [
           pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
@@ -365,16 +387,7 @@ pw.Column(
                 'No. Akaun: ${baca('nomborAkaun')}',
               ),
           ],
-
-          pw.SizedBox(height: 30),
-          pw.Divider(),
-          pw.Text(
-            'Dokumen dijana menggunakan SebutPro MY',
-            style: const pw.TextStyle(
-              fontSize: 8,
-              color: PdfColors.grey700,
-            ),
-          ),
+          
         ],
       ),
     );
