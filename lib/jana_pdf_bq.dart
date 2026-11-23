@@ -131,6 +131,7 @@ kandungan.add(
                   ? 'NAMA SYARIKAT'
                   : baca('nama'),
               style: pw.TextStyle(
+                color: PdfColors.blue900,
                 fontSize: 15,
                 fontWeight: pw.FontWeight.bold,
                 color: PdfColors.blueGrey900,
@@ -379,17 +380,13 @@ kandungan.add(
     headerStyle: pw.TextStyle(
       fontSize: gayaJkr ? 8 : 9,
       fontWeight: pw.FontWeight.bold,
-      color: gayaJkr
-          ? PdfColors.black
-          : PdfColors.white,
+      color: PdfColors.white,
     ),
     cellStyle: pw.TextStyle(
       fontSize: gayaJkr ? 8 : 9,
     ),
     headerDecoration: pw.BoxDecoration(
-      color: gayaJkr
-          ? PdfColors.grey300
-          : PdfColors.blueGrey800,
+      color: PdfColors.blue900,
     ),
     border: pw.TableBorder.all(
       color: gayaJkr
@@ -508,6 +505,7 @@ if (gayaJkr && ringkasanHarga.isNotEmpty) {
           style: pw.TextStyle(
             fontSize: 12,
             fontWeight: pw.FontWeight.bold,
+            color: PdfColors.blue900,
           ),
         ),
       ),
