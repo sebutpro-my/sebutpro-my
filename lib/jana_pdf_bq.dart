@@ -131,10 +131,9 @@ kandungan.add(
                   ? 'NAMA SYARIKAT'
                   : baca('nama'),
               style: pw.TextStyle(
-                color: PdfColors.blue900,
                 fontSize: 15,
                 fontWeight: pw.FontWeight.bold,
-                color: PdfColors.blueGrey900,
+                color: PdfColors.blue900,
               ),
             ),
             if (baca('ssm').isNotEmpty)
