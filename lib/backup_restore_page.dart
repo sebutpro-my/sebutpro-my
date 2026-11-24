@@ -269,10 +269,53 @@ await showDialog<void>(
         onPressed: () => Navigator.pop(dialogContext),
         child: const Text('Tutup'),
       ),
-      ElevatedButton(
-        onPressed: () => Navigator.pop(dialogContext),
-        child: const Text('Saya Faham (Ujian)'),
+      
+ElevatedButton(
+  onPressed: () async {
+    Navigator.pop(dialogContext);
+
+    if (!mounted) return;
+
+    final disahkan = await showDialog<bool>(
+      context: context,
+      builder: (contextPengesahan) => AlertDialog(
+        title: const Text('Pengesahan Restore'),
+        content: const Text(
+          'Restore akan menggantikan data '
+          'SebutPro MY yang sedang tersimpan.\n\n'
+          'Pastikan fail backup telah disimpan '
+          'di tempat yang selamat.\n\n'
+          'MOD UJIAN: Tiada data akan diubah.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () =>
+                Navigator.pop(contextPengesahan, false),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () =>
+                Navigator.pop(contextPengesahan, true),
+            child: const Text('Sahkan (Ujian)'),
+          ),
+        ],
       ),
+    );
+
+    if (!mounted || disahkan != true) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(
+        content: Text(
+          'Pengesahan diterima. '
+          'Mod ujian: Tiada data dipulihkan.',
+        ),
+      ),
+    );
+  },
+  child: const Text('Saya Faham (Ujian)'),
+),
+
     ],
   ),
 );
