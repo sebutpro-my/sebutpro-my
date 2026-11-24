@@ -4,9 +4,6 @@ import 'dart:convert';
 import 'backup_download_stub.dart'
     if (dart.library.html) 'backup_download_web.dart';
 
-import 'backup_picker_stub.dart'
-    if (dart.library.html) 'backup_picker_web.dart';
-
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
