@@ -49,7 +49,16 @@ class DashboardPage extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
-        children: [
+        children: [       
+          Center(
+            child: Image.asset(
+              'web/icons/Icon-192.png',
+              width: 100,
+              height: 100,
+              fit: BoxFit.contain,
+            ),
+          ),
+          const SizedBox(height: 16),
           const Text(
             'Selamat Datang!',
             style: TextStyle(
