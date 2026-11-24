@@ -207,14 +207,44 @@ Future<void> semakFailRestore() async {
     }
 
     final data = kandungan['data'] as Map<String, dynamic>;
+ 
+for (final kunci in kunciUtama) {
+  if (!data.containsKey(kunci)) {
+    throw FormatException(
+      'Data utama tidak lengkap: $kunci',
+    );
+  }
+}
 
-    for (final kunci in kunciUtama) {
-      if (!data.containsKey(kunci)) {
-        throw FormatException(
-          'Data utama tidak lengkap: $kunci',
-        );
-      }
-    }
+for (final entry in data.entries) {
+  final rekod = entry.value;
+
+  if (rekod is! Map<String, dynamic>) {
+    throw FormatException(
+      'Struktur tidak sah: ${entry.key}',
+    );
+  }
+
+  final jenis = rekod['jenis'];
+  final nilai = rekod['nilai'];
+
+  final sah = switch (jenis) {
+    'string' => nilai is String,
+    'stringList' => nilai is List &&
+        nilai.every((item) => item is String),
+    'bool' => nilai is bool,
+    'int' => nilai is int,
+    'double' => nilai is num,
+    _ => false,
+  };
+
+  if (!sah) {
+    throw FormatException(
+      'Jenis data tidak sah: ${entry.key}',
+    );
+  }
+}
+
 
     if (!mounted) return;
 
