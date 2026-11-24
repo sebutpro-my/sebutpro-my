@@ -276,21 +276,7 @@ await showDialog<void>(
     ],
   ),
 );
-
-        content: Text(
-          'Fail SebutPro MY berjaya dibaca.\n\n'
-          'Jumlah kunci: ${data.length}\n\n'
-          'Ini hanya pratonton. '
-          'Tiada data dipulihkan lagi.',
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Tutup'),
-          ),
-        ],
-      ),
-    );
+     
   } catch (e) {
     if (!mounted) return;
 
