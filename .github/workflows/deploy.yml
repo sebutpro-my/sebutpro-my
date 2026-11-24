@@ -16,11 +16,8 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  deploy:
+  build:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
       - name: Checkout repository
@@ -37,16 +34,20 @@ jobs:
       - name: Build Flutter Web
         run: flutter build web --release --base-href /sebutpro-my/
 
-      - name: Setup GitHub Pages
-        uses: actions/configure-pages@v5
-
       - name: Upload website
         uses: actions/upload-pages-artifact@v3
         with:
           path: build/web
 
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
       - name: Deploy website
         id: deployment
         uses: actions/deploy-pages@v4
-
-# Trigger fresh deployment for SebutPro MY
