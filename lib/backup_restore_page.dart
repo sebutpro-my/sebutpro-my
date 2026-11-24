@@ -5,6 +5,7 @@ import 'backup_download_stub.dart'
     if (dart.library.html) 'backup_download_web.dart';
 import 'backup_picker_stub.dart'
     if (dart.library.html) 'backup_picker_web.dart';
+import 'backup_restore_service.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -301,17 +302,45 @@ ElevatedButton(
         ],
       ),
     );
+    
+if (!mounted || disahkan != true) return;
 
-    if (!mounted || disahkan != true) return;
+try {
+  await BackupRestoreService.pulihkan(data);
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text(
-          'Pengesahan diterima. '
-          'Mod ujian: Tiada data dipulihkan.',
-        ),
+  if (!mounted) return;
+
+  await showDialog<void>(
+    context: context,
+    builder: (dialogContext) => AlertDialog(
+      title: const Text('Restore Berjaya'),
+      content: const Text(
+        'Data backup berjaya disimpan semula.\n\n'
+        'Sila tutup dan buka semula SebutPro MY '
+        'untuk memuatkan rekod yang dipulihkan.',
       ),
-    );
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.pop(dialogContext),
+          child: const Text('OK'),
+        ),
+      ],
+    ),
+  );
+
+  if (!mounted) return;
+  await semakData();
+} catch (e) {
+  if (!mounted) return;
+
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
+      content: Text('Restore gagal: $e'),
+      backgroundColor: Colors.red,
+    ),
+  );
+}
+
   },
   child: const Text('Saya Faham (Ujian)'),
 ),
