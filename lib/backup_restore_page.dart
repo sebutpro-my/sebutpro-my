@@ -3,6 +3,8 @@ import 'dart:convert';
 
 import 'backup_download_stub.dart'
     if (dart.library.html) 'backup_download_web.dart';
+import 'backup_picker_stub.dart'
+    if (dart.library.html) 'backup_picker_web.dart';
 
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -187,6 +189,65 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
     }
   }
 
+Future<void> semakFailRestore() async {
+  try {
+    final teks = await pilihFailBackup();
+
+    if (teks == null) return;
+
+    final kandungan = jsonDecode(teks);
+
+    if (kandungan is! Map<String, dynamic> ||
+        kandungan['aplikasi'] != 'SebutPro MY' ||
+        kandungan['versi_backup'] != 1 ||
+        kandungan['data'] is! Map<String, dynamic>) {
+      throw const FormatException(
+        'Format backup SebutPro MY tidak sah.',
+      );
+    }
+
+    final data = kandungan['data'] as Map<String, dynamic>;
+
+    for (final kunci in kunciUtama) {
+      if (!data.containsKey(kunci)) {
+        throw FormatException(
+          'Data utama tidak lengkap: $kunci',
+        );
+      }
+    }
+
+    if (!mounted) return;
+
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Fail Backup Dikesan'),
+        content: Text(
+          'Fail SebutPro MY berjaya dibaca.\n\n'
+          'Jumlah kunci: ${data.length}\n\n'
+          'Ini hanya pratonton. '
+          'Tiada data dipulihkan lagi.',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Tutup'),
+          ),
+        ],
+      ),
+    );
+  } catch (e) {
+    if (!mounted) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text('Gagal membaca backup: $e'),
+        backgroundColor: Colors.red,
+      ),
+    );
+  }
+}
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -258,16 +319,19 @@ class _BackupRestorePageState extends State<BackupRestorePage> {
                   : buatBackup,
             ),
           ),
-          const Card(
-            child: ListTile(
-              leading: Icon(Icons.upload_file_outlined),
-              title: Text('Restore Data'),
-              subtitle: Text(
-                'Akan diaktifkan selepas '
-                'fungsi backup diuji.',
-              ),
-            ),
-          ),
+          
+Card(
+  child: ListTile(
+    leading: const Icon(Icons.upload_file_outlined),
+    title: const Text('Restore Data'),
+    subtitle: const Text(
+      'Pilih dan semak fail backup JSON.',
+    ),
+    trailing: const Icon(Icons.chevron_right),
+    onTap: semakFailRestore,
+  ),
+),
+
           const SizedBox(height: 20),
           const Text(
             'Penting: Simpan fail backup di tempat '
