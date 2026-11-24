@@ -248,10 +248,35 @@ for (final entry in data.entries) {
 
     if (!mounted) return;
 
-    await showDialog<void>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: const Text('Fail Backup Dikesan'),
+    
+await showDialog<void>(
+  context: context,
+  builder: (dialogContext) => AlertDialog(
+    title: const Text('Pengesahan Fail Backup'),
+    content: Text(
+      'Fail backup SebutPro MY berjaya disemak.\n\n'
+      'Jumlah kunci data: ${data.length}\n\n'
+      'PERHATIAN:\n'
+      'Proses Restore sebenar akan menggantikan '
+      'data aplikasi yang sedang tersimpan.\n\n'
+      'Pastikan anda mempunyai salinan backup '
+      'sebelum meneruskan.\n\n'
+      'MOD UJIAN: Tiada data akan diubah '
+      'pada peringkat ini.',
+    ),
+    actions: [
+      TextButton(
+        onPressed: () => Navigator.pop(dialogContext),
+        child: const Text('Tutup'),
+      ),
+      ElevatedButton(
+        onPressed: () => Navigator.pop(dialogContext),
+        child: const Text('Saya Faham (Ujian)'),
+      ),
+    ],
+  ),
+);
+
         content: Text(
           'Fail SebutPro MY berjaya dibaca.\n\n'
           'Jumlah kunci: ${data.length}\n\n'
