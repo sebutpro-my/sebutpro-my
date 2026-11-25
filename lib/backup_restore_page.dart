@@ -285,10 +285,12 @@ ElevatedButton(
         title: const Text('Pengesahan Restore'),
         content: const Text(
           'Restore akan menggantikan data '
-          'SebutPro MY yang sedang tersimpan.\n\n'
+          'SebutPro MY yang sedang tersimpan.\n\n'   
           'Pastikan fail backup telah disimpan '
           'di tempat yang selamat.\n\n'
-          'MOD UJIAN: Tiada data akan diubah.',
+          'Selepas anda menekan Sahkan Restore, '
+          'data sedia ada akan digantikan '
+          'dengan kandungan fail backup.',
         ),
         actions: [
           TextButton(
