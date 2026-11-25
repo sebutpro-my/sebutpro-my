@@ -70,7 +70,62 @@ class DashboardPage extends StatelessWidget {
           const Text(
             'Urus dokumen kontraktor dengan mudah.',
           ),
-          const SizedBox(height: 24),
+          
+const SizedBox(height: 16),
+Container(
+  width: double.infinity,
+  padding: const EdgeInsets.all(14),
+  decoration: BoxDecoration(
+    color: const Color(0xFFFFF8E7),
+    borderRadius: BorderRadius.circular(12),
+    border: Border.all(
+      color: const Color(0xFFD4AF37),
+    ),
+  ),
+  child: const Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [
+      Row(
+        children: [
+          Icon(
+            Icons.shield_outlined,
+            color: Color(0xFF17345C),
+            size: 22,
+          ),
+          SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              'Makluman Keselamatan Data',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF17345C),
+              ),
+            ),
+          ),
+        ],
+      ),
+      SizedBox(height: 8),
+      Text(
+        'Data SebutPro MY disimpan secara setempat '
+        'dalam pelayar peranti anda, bukan di awan. '
+        'Data mungkin hilang jika storan pelayar '
+        'dipadam atau peranti mengalami masalah.',
+        style: TextStyle(fontSize: 13),
+      ),
+      SizedBox(height: 6),
+      Text(
+        'Sila buat Backup & Restore secara berkala '
+        'dan simpan fail backup di tempat yang selamat.',
+        style: TextStyle(
+          fontSize: 13,
+          fontWeight: FontWeight.w600,
+        ),
+      ),
+    ],
+  ),
+),
+const SizedBox(height: 24),
+
           _menu(
             context,
             Icons.description_outlined,
