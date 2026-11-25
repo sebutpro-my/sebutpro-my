@@ -297,7 +297,7 @@ ElevatedButton(
           ElevatedButton(
             onPressed: () =>
                 Navigator.pop(contextPengesahan, true),
-            child: const Text('Sahkan (Ujian)'),
+            child: const Text('Sahkan Restore'),
           ),
         ],
       ),
