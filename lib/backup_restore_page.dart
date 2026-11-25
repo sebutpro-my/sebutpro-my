@@ -342,7 +342,8 @@ try {
 }
 
   },
-  child: const Text('Saya Faham (Ujian)'),
+  
+child: const Text('Teruskan'),
 ),
 
     ],
