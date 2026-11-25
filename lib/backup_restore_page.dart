@@ -262,8 +262,10 @@ await showDialog<void>(
       'data aplikasi yang sedang tersimpan.\n\n'
       'Pastikan anda mempunyai salinan backup '
       'sebelum meneruskan.\n\n'
-      'MOD UJIAN: Tiada data akan diubah '
-      'pada peringkat ini.',
+      'Data hanya akan digantikan selepas '
+      'anda menekan butang Sahkan Restore '
+      'pada langkah seterusnya.',
+
     ),
     actions: [
       TextButton(
